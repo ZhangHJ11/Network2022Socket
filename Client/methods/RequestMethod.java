@@ -7,5 +7,5 @@ import java.io.InputStream;
 
 public interface RequestMethod {
     public abstract void ConductResponse(InputStream input,String s) throws IOException;
-    public abstract void SendRequest(String s, boolean isKeepAlive, Body body) throws IOException;
+    public abstract void SendRequest(String s, boolean isKeepAlive) throws IOException;
 }
