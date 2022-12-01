@@ -1,3 +1,5 @@
+package server;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -15,7 +17,7 @@ public class Requset {
     private String method;
     private String url;
     private String queryStr; // For POST, get query in Body
-    private Map<String, List<String>> paraMap; // ´æ´¢queryStrÖÐ»ñÈ¡µÄkey-valueÖµ£¬ÔÊÐíÒ»¶Ô¶à
+    private Map<String, List<String>> paraMap; // ï¿½æ´¢queryStrï¿½Ð»ï¿½È¡ï¿½ï¿½key-valueÖµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Ô¶ï¿½
     private final String CRLF = "\r\n";
 
     public String getMethod() {
