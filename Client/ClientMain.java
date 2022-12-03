@@ -2,6 +2,7 @@ package Client;
 
 import java.io.IOError;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 
 public class ClientMain {
