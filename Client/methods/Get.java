@@ -29,8 +29,7 @@ public class Get implements RequestMethod {
 
         requestHead.put("Accept", "*/*");
         requestHead.put("Accept-Language", "zh-cn");
-        requestHead.put("User-Agent", "WeDoRay-HTTPClient");
-
+        requestHead.put("User-Agent", "Test-HTTPClient");
         if (port != 80 && port != 443) {
             requestHead.put("Host", host + ':' + port);
         } else {
@@ -52,6 +51,8 @@ public class Get implements RequestMethod {
             HTTPRequest request = assembleRequest(url,isKeepAlive);
             server.getOutputStream().write(request.toString().getBytes());
 
+            InputStream in = server.getInputStream();
+            conductResponse(in);
         }
         catch (ConnectException e) {
             e.printStackTrace();

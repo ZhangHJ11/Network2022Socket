@@ -1,9 +1,5 @@
 package Client;
 
-import Client.Requestmessage.HTTPRequest;
-import Client.Requestmessage.RequestBody;
-import Client.Requestmessage.RequestHead;
-import Client.Requestmessage.RequestLine;
 import Client.methods.Get;
 import Client.methods.Post;
 import Client.methods.RequestMethod;
