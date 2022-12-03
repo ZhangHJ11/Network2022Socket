@@ -11,26 +11,28 @@ import java.util.LinkedHashMap;
 public class Connections {
     //实现链接池
     private HashMap<String, Connect> pool = new LinkedHashMap<>();
-    public Connect getConnection(String host,int port,boolean isKeepAlive) throws IOException{
-        Connect con=pool.get(host);
-        if(con!=null){
-            if(con.isClosed()){
+
+    public Connect getConnection(String host, int port, boolean isKeepAlive) throws IOException {
+        Connect con = pool.get(host);
+        if (con != null) {
+            if (con.isClosed()) {
                 pool.remove(host);
-            }else{
+            } else {
                 return con;
             }
         }
-        con=new Connect(host,port,isKeepAlive);
-        pool.put(host,con);
+        con = new Connect(host, port, isKeepAlive);
+        pool.put(host, con);
         con.creat();
         return con;
     }
-    public void removeConnection(String host){
-        Connect con=pool.get(host);
-        if(con!=null){
+
+    public void removeConnection(String host) {
+        Connect con = pool.get(host);
+        if (con != null) {
             try {
                 con.close();
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

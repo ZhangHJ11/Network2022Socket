@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Requset {
+public class Request {
     private InputStream fromClient;
     private byte[] data = new byte[1024 * 1024]; // 1MB
     private int GETlen;
@@ -28,7 +28,7 @@ public class Requset {
         return url;
     }
 
-    public Requset(Socket client) {
+    public Request(Socket client) {
         try {
             fromClient = client.getInputStream();
             GETlen = fromClient.read(data);

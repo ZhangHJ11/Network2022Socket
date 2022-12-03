@@ -34,7 +34,7 @@ public class HTTPServer {
             System.out.println("Got a client.");
 
             // GET message
-            Requset requset = new Requset(client);
+            Request request = new Request(client);
 
             // POST message
             Response response = new Response(client);

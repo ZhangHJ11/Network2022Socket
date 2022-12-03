@@ -1,11 +1,10 @@
 package Client.methods;
 
-import com.sun.xml.internal.ws.wsdl.writer.document.soap.Body;
-
 import java.io.IOException;
 import java.io.InputStream;
 
 public interface RequestMethod {
-    public abstract void ConductResponse(InputStream input,String s) throws IOException;
-    public abstract void SendRequest(String s, boolean isKeepAlive) throws IOException;
+    public abstract void conductResponse(InputStream input) throws IOException;
+
+    public abstract void sendRequest(String s, boolean isKeepAlive) throws IOException;
 }

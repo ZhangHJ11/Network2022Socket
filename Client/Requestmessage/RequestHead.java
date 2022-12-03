@@ -1,5 +1,6 @@
 package Client.Requestmessage;
 
+import lombok.Getter;
 import util.InputStreamReader;
 
 import java.io.IOException;
@@ -10,18 +11,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 //首部行 用来说明浏览器、服务器和报文主题的一些信息
-public class Requesthead {
-    public HashMap<String, String> headmap = new LinkedHashMap<>();
+public class RequestHead {
+    @Getter
+    private HashMap<String, String> hashMap = new LinkedHashMap<>();
 
-    public Requesthead() {
+    public RequestHead() {
 
     }
 
     //    从输入流中构成报文头
-    public Requesthead(InputStream inputStream) throws IOException {
+    public RequestHead(InputStream inputStream) throws IOException {
         List<String> headline = new ArrayList<>();
         String tmp;
-        while (!(tmp = InputStreamReader.Readline(inputStream)).equals("")) {
+        while (!(tmp = InputStreamReader.readline(inputStream)).equals("")) {
             headline.add(tmp);
         }
 
@@ -30,11 +32,11 @@ public class Requesthead {
             int index = head.indexOf(":");
             String name = head.substring(0, index);
             String value = head.substring(index + 1).trim();
-            headmap.put(name, value);
+            hashMap.put(name, value);
         }
     }
 
     public void put(String name, String value) {
-        headmap.put(name, value);
+        hashMap.put(name, value);
     }
 }

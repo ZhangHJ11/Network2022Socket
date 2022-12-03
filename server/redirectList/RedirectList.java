@@ -32,17 +32,17 @@ public class RedirectList {
     }
     
     private void paraseConfig(String path) {
-        String []line;
-        File file = new File(path);
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String tempString;
-            while ((tempString = reader.readLine()) != null) {
-                line = tempString.split("\\s+");
-                redirectLists.put(line[0], line[1]);
-                redirectTypes.put(line[0], Integer.parseInt(line[2]));
-            }
-        } catch (IOException e) {
-            System.out.println("配置文件读取失败");
-        }
+//        String []line;
+//        File file = new File(path);
+//        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+//            String tempString;
+//            while ((tempString = reader.readLine()) != null) {
+//                line = tempString.split("\\s+");
+//                redirectLists.put(line[0], line[1]);
+//                redirectTypes.put(line[0], Integer.parseInt(line[2]));
+//            }
+//        } catch (IOException e) {
+//            System.out.println("配置文件读取失败");
+//        }
     }
 }
