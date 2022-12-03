@@ -49,7 +49,7 @@ public class Request {
         System.out.println(requestInfo);
         method = requestInfo.substring(0, requestInfo.indexOf("/"));
         int tmp1 = requestInfo.indexOf("/") + 1;
-        int tmp2 = requestInfo.indexOf("HTTP/");
+        int tmp2 = requestInfo.indexOf("HTTP/") - 1;
         url = requestInfo.substring(tmp1, tmp2);
         if (method.equals("POST")) {
             queryStr = requestInfo.substring(requestInfo.lastIndexOf(CRLF)).trim();

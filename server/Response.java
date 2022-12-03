@@ -76,12 +76,12 @@ public class Response {
 
     private void setContent(String url) {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(url));
+            BufferedReader reader = new BufferedReader(
+                    new FileReader(System.getProperty("user.dir") + File.separator + "server" + File.separator + url));
             String tmp;
             while ((tmp = reader.readLine()) != null) {
                 appendContent(tmp);
             }
-            appendContent(tmp);
             reader.close();
         } catch (Exception e) {
             e.printStackTrace();
