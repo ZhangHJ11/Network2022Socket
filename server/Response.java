@@ -82,10 +82,10 @@ public class Response {
                 appendContent(tmp);
             }
             appendContent(tmp);
+            reader.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 }
