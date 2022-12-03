@@ -17,7 +17,7 @@ public class Request {
     private String method;
     private String url;
     private String queryStr; // For POST, get query in Body
-    private Map<String, List<String>> paraMap; // �洢queryStr�л�ȡ��key-valueֵ������һ�Զ�
+    private Map<String, List<String>> paraMap;
     private final String CRLF = "\r\n";
 
     public String getMethod() {

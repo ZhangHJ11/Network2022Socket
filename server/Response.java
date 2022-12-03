@@ -1,6 +1,9 @@
 package server;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
@@ -47,6 +50,7 @@ public class Response {
         headInfo.append("Content-length:").append(contentLen).append(CRLF);
         headInfo.append(CRLF);
         // Return content, blank now, need html file
+        headInfo.append(content);
     }
 
     public Response appendContent(String info) {
@@ -65,6 +69,20 @@ public class Response {
             e.printStackTrace();
             System.out.println("Push Failed.");
         }
+    }
+
+    private void setContent(String url) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(url));
+            String tmp;
+            while ((tmp = reader.readLine()) != null) {
+                appendContent(tmp);
+            }
+            appendContent(tmp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
