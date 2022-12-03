@@ -1,6 +1,5 @@
 package Client.Requestmessage;
 
-import lombok.Getter;
 import util.InputStreamReader;
 
 import java.io.IOException;
@@ -12,7 +11,7 @@ import java.util.List;
 
 //首部行 用来说明浏览器、服务器和报文主题的一些信息
 public class RequestHead {
-    @Getter
+
     private HashMap<String, String> hashMap = new LinkedHashMap<>();
 
     public RequestHead() {
@@ -38,5 +37,9 @@ public class RequestHead {
 
     public void put(String name, String value) {
         hashMap.put(name, value);
+    }
+
+    public HashMap<String, String> getHashMap() {
+        return hashMap;
     }
 }

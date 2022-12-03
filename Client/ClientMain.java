@@ -1,5 +1,6 @@
 package Client;
 
+import java.io.File;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +11,6 @@ public class ClientMain {
         int port = 8888;
         String host = "127.0.0.1";
         NewClient client = new NewClient(port, host,"Get");
-        client.Get("/Resources/index.html",true);
+        client.Get("./Resources/index.html",true);
     }
 }
