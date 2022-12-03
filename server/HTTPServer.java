@@ -36,7 +36,7 @@ public class HTTPServer {
             // GET message
             Request request = new Request(client);
 
-            Response response = new Response(client);
+            Response response = new Response(client, request);
             response.pushToClient(200);
         } catch (IOException e) {
             e.printStackTrace();

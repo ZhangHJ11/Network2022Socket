@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.Date;
 
 public class Response {
+    private Request request;
     private BufferedWriter toClient;
     private StringBuilder content = new StringBuilder();
     private StringBuilder headInfo = new StringBuilder();
@@ -18,8 +19,9 @@ public class Response {
     private final String CRLF = "\r\n";
     // MIMETypes MIMEList = MIMETypes.getMIMELists();
 
-    public Response(Socket client) {
+    public Response(Socket client, Request request) {
         try {
+            this.request = request;
             toClient = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,6 +52,7 @@ public class Response {
         headInfo.append("Content-length:").append(contentLen).append(CRLF);
         headInfo.append(CRLF);
         // Return content, blank now, need html file
+        setContent(request.getURL());
         headInfo.append(content);
     }
 
