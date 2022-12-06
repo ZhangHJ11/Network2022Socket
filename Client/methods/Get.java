@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.util.Objects;
 
 public class Get implements RequestMethod {
     private String host;
@@ -41,8 +42,19 @@ public class Get implements RequestMethod {
     }
 
     public void conductResponse(InputStream inputStream) throws IOException {
-        System.out.println(InputStreamReader.readAll(inputStream));
-
+//        System.out.println(InputStreamReader.readAll(inputStream));
+        String res = InputStreamReader.readAll(inputStream);
+        String headline = res.substring(0,res.indexOf('\n'));
+        String[] head = headline.split(" ");
+        switch (head[1]){
+//            status code
+            case "200":
+                System.out.println(res);
+                break;
+            case "404":
+                System.out.println("404 Not Found");
+                break;
+        }
     }
 
     public void sendRequest(String url, boolean isKeepAlive) throws IOException {

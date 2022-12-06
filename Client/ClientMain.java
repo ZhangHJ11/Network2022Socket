@@ -11,6 +11,6 @@ public class ClientMain {
         int port = 8888;
         String host = "127.0.0.1";
         NewClient client = new NewClient(port, host, "Get");
-        client.Get("." + File.separator + "Resources" + File.separator + "index.html", true);
+        client.Get("." + "/" + "Resources" + "/" + "index.html", true);
     }
 }
