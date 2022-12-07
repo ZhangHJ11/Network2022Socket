@@ -33,11 +33,15 @@ public class HTTPServer {
             Socket client = serverSocket.accept();
             System.out.println("Got a client.");
 
-            // GET message
-            Request request = new Request(client);
-
-            Response response = new Response(client, request);
-            response.pushToClient(200);
+            // communicate
+            Request firstRequest = new Request(client);
+            Response firstResponse = new Response(client, firstRequest);
+            firstResponse.pushToClient(200);
+            if (firstRequest.isKeepAlive()) {
+                while (true) {
+                    communicate(client);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Client error.");
@@ -52,6 +56,12 @@ public class HTTPServer {
     public static void main(String[] args) {
         HTTPServer sever = new HTTPServer();
         sever.start();
+    }
+
+    private void communicate(Socket client) {
+        Request request = new Request(client);
+        Response response = new Response(client, request);
+        response.pushToClient(200);
     }
 
     private static class ClientHandler extends Thread {

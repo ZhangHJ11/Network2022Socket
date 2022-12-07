@@ -17,7 +17,7 @@ public class Response {
     private int contentLen = 0; // bytes number;
     private final String BLANK = " ";
     private final String CRLF = "\r\n";
-    // MIMETypes MIMEList = MIMETypes.getMIMELists();
+    MIMETypes MIMEList = MIMETypes.getMIMELists();
 
     public Response(Socket client, Request request) {
         try {
@@ -28,7 +28,7 @@ public class Response {
         }
     }
 
-    private void createHeadInfo(int statusCode, String location) {
+    private void createHeadInfo(int statusCode, String url) {
         // Status Line
         headInfo.append("HTTP/1.1").append(BLANK);
         headInfo.append(statusCode).append(BLANK); // HTTP Status Code, default 200
@@ -45,14 +45,15 @@ public class Response {
         }
 
         // Head Line
+        setContent(url);
         headInfo.append("Date:").append(new Date()).append(CRLF);
         headInfo.append("Sever:").append("LBX Sever/0.0.0;charset=GBK").append(CRLF);
-        // String ContentType = MIMEList.getMIMEType(location);
-        headInfo.append("Content-type:").append("text/html").append(CRLF);
+        String contentType = MIMEList.getMIMEType(url);
+        headInfo.append("Content-type:").append(contentType).append(CRLF);
         headInfo.append("Content-length:").append(contentLen).append(CRLF);
         headInfo.append(CRLF);
-        // Return content, blank now, need html file
-        setContent(request.getURL());
+
+        // Body
         headInfo.append(content);
     }
 
@@ -63,7 +64,7 @@ public class Response {
     }
 
     public void pushToClient(int statusCode) {
-        createHeadInfo(statusCode, "");
+        createHeadInfo(statusCode, request.getURL());
         try {
             toClient.write(headInfo.toString());
             toClient.write(content.toString());
@@ -77,7 +78,7 @@ public class Response {
     private void setContent(String url) {
         try {
             BufferedReader reader = new BufferedReader(
-                    new FileReader(System.getProperty("user.dir") + File.separator + url));
+                    new FileReader(System.getProperty("user.dir") + File.separator + "server" + File.separator + url));
             String tmp;
             while ((tmp = reader.readLine()) != null) {
                 appendContent(tmp);

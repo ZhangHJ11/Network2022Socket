@@ -45,6 +45,13 @@ public class Request {
         }
     }
 
+    public boolean isKeepAlive() {
+        if ((requestInfo.indexOf("Keep-Alive") != -1)) {
+            return true;
+        }
+        return false;
+    }
+
     private void parseGETInfo() {
         System.out.println(requestInfo);
         method = requestInfo.substring(0, requestInfo.indexOf("/"));
