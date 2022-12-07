@@ -1,5 +1,11 @@
 package server;
+import com.sun.corba.se.spi.activation.Server;
+import server.redirectList.RedirectList;
+import server.UserService.RegisterAndLogin;
+import server.redirectList.RedirectList;
+import static server.HTTPServer.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -11,6 +17,8 @@ import java.util.Map;
 
 public class Request {
     private InputStream fromClient;
+    private FileTable getFile;
+    private static RedirectList redirectList = RedirectList.getRedirectList();
     private byte[] data = new byte[1024 * 1024]; // 1MB
     private int GETlen;
     private String requestInfo;
@@ -45,12 +53,17 @@ public class Request {
         }
     }
 
+    /**
+     * 请求行的数据
+     */
     private void parseGETInfo() {
-        System.out.println(requestInfo);
+        //System.out.println(requestInfo);
         method = requestInfo.substring(0, requestInfo.indexOf("/"));
         int tmp1 = requestInfo.indexOf("/") + 1;
         int tmp2 = requestInfo.indexOf("HTTP/") - 1;
         url = requestInfo.substring(tmp1, tmp2);
+        //版本默认 HTTP/1.1 不做处理
+        //post 才有实体主体
         if (method.equals("POST")) {
             queryStr = requestInfo.substring(requestInfo.lastIndexOf(CRLF)).trim();
         }
@@ -68,11 +81,79 @@ public class Request {
         }
     }
 
+    /**
+     * 通过首部字段号查询之后的值
+     * @param key
+     * @return
+     */
     public String[] getParaValues(String key) {
         List<String> list = paraMap.get(key);
         if (list == null || list.size() == 1) {
             return null;
         }
         return list.toArray(new String[0]);
+    }
+
+    private byte[] getFileData(String location){
+        byte[] FileData = new byte[0];
+        try {
+            FileData = FileHandle.readFromFile(location);
+        } catch (FileNotFoundException ex){
+            System.out.println("未找到文件");
+            return null;
+        }
+        return FileData;
+    }
+
+    public returnValue handle(){
+        int statusCode;
+        String location;
+        byte[] FileData;
+        if(method.equals("GET")){
+            if(queryStr.startsWith("login") || queryStr.startsWith("register")){
+                /** 处理登陆
+                 *
+                return RegisterAndLogin(“类型”，name,password);
+                 */
+            }
+            String redirectQuery = redirectList.search(url);
+            if(!redirectQuery.equals("")){
+                //301,302
+                statusCode = Integer.parseInt(redirectQuery.substring(0,3));
+                location = BIND_DIR + redirectQuery.substring(3);
+            }
+            else{
+                statusCode = 200;
+                location = BIND_DIR + url;
+
+                //304
+                //文件修改时间
+                Long getTime = getFile.getModifiedTime(location);
+                Long modifyTime = modifiedFileTable.getModifiedTime(location);
+                if(getTime >= modifyTime){
+                    statusCode = 304;
+                    location = BIND_DIR + NOT_MODIFIED_RES;
+                }
+                else {
+                    //修改文件
+                    getFile.modify(location);
+                }
+            }
+
+            FileData = getFileData(location);
+            if(FileData == null){
+                statusCode = 404;
+                location = BIND_DIR + NOT_FOUND_RES;
+                FileData = getFileData(location);
+            }
+            return new returnValue(statusCode,location);
+        }
+        else if(method.equals("POST")){
+            location = BIND_DIR + url;
+
+        }
+        else{
+
+        }
     }
 }

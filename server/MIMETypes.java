@@ -111,7 +111,7 @@ public class MIMETypes {
      * 根据传入URI返回对应的MIME类型，找不到默认按照 application/octet-stream 处理
      * 
      * @param oUri 传入的URI
-     * @return MIME类型字符�?
+     * @return MIME类型字符??
      */
     public String getMIMEType(String oUri) {
         int locPoint = oUri.lastIndexOf(".");

@@ -15,6 +15,7 @@ public class HTTPServer {
     public static int DEFAULT_PORT = 8888;
     public static String HOSTNAME = "127.0.0.1";
     private ServerSocket serverSocket; // get connect with chrome
+    public static FileTable modifiedFileTable; // 记录文件修改时间，用于304
 
     // start sever
     public void start() {
@@ -37,7 +38,7 @@ public class HTTPServer {
             Request request = new Request(client);
 
             Response response = new Response(client, request);
-            response.pushToClient(200);
+            response.pushToClient(200,"");
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Client error.");

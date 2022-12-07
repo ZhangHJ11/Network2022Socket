@@ -1,4 +1,4 @@
-package server.UserService;
+package server;
 
 public class returnValue {
     public int statusCode;

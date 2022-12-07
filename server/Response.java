@@ -17,7 +17,7 @@ public class Response {
     private int contentLen = 0; // bytes number;
     private final String BLANK = " ";
     private final String CRLF = "\r\n";
-    // MIMETypes MIMEList = MIMETypes.getMIMELists();
+    MIMETypes MIMEList = MIMETypes.getMIMELists();
 
     public Response(Socket client, Request request) {
         try {
@@ -36,21 +36,37 @@ public class Response {
             case 200:
                 headInfo.append("OK").append(CRLF);
                 break;
+            case 301:
+                headInfo.append("Moved Permanently").append(CRLF);
+                break;
+            case 302:
+                headInfo.append("Found").append(CRLF);
+                break;
+            case 304:
+                headInfo.append("Not Modified").append(CRLF);
+                break;
             case 404:
                 headInfo.append("NOT FOUND").append(CRLF);
                 break;
-            case 505:
-                headInfo.append("SEVER ERROR").append(CRLF);
+            case 405:
+                headInfo.append("NOT Permitted").append(CRLF);
+                break;
+            case 500: //服务端错误
+                headInfo.append("Internal Server Error").append(CRLF);
                 break;
         }
-
+        if(statusCode == 301){
+            headInfo.append("Location: ").append(location);
+        }
         // Head Line
         headInfo.append("Date:").append(new Date()).append(CRLF);
-        headInfo.append("Sever:").append("LBX Sever/0.0.0;charset=GBK").append(CRLF);
-        // String ContentType = MIMEList.getMIMEType(location);
+        headInfo.append("Server:").append("HOST Sever/0.0.0;charset=GBK").append(CRLF);
+        String ContentType = MIMEList.getMIMEType(location);
         headInfo.append("Content-type:").append("text/html").append(CRLF);
         headInfo.append("Content-length:").append(contentLen).append(CRLF);
+
         headInfo.append(CRLF);
+
         // Return content, blank now, need html file
         setContent(request.getURL());
         headInfo.append(content);
@@ -62,8 +78,12 @@ public class Response {
         return this;
     }
 
-    public void pushToClient(int statusCode) {
-        createHeadInfo(statusCode, "");
+    /**
+     * 返回客户端
+     * @param statusCode
+     */
+    public void pushToClient(int statusCode,String location) {
+        createHeadInfo(statusCode, location);
         try {
             toClient.write(headInfo.toString());
             toClient.write(content.toString());
