@@ -14,13 +14,6 @@ public class NewClient {
     RequestMethod requestMethod;
 
 
-    public NewClient(int port, String host) {
-        this.port = port;
-        this.host = host;
-    }
-
-
-
     public NewClient(int port, String host, String method) {
         this.port = port;
         this.host = host;
