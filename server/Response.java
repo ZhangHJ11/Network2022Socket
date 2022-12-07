@@ -7,12 +7,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Date;
 
 public class Response {
     private Request request;
     private BufferedWriter toClient;
-    private StringBuilder content = new StringBuilder();
+    //private StringBuilder content = new StringBuilder();
+    private String content;
     private StringBuilder headInfo = new StringBuilder();
     private int contentLen = 0; // bytes number;
     private final String BLANK = " ";
@@ -26,6 +28,7 @@ public class Response {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        content = Arrays.toString(request.fileData);
     }
 
     private void createHeadInfo(int statusCode, String location) {
@@ -85,7 +88,7 @@ public class Response {
      * @param statusCode
      */
     public void pushToClient(int statusCode,String location) {
-        createHeadInfo(statusCode, location);
+        createHeadInfo(request.statusCode, request.location);
         try {
             toClient.write(headInfo.toString());
             toClient.write(content.toString());

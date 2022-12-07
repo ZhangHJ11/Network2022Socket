@@ -33,7 +33,7 @@ public class MIMETypes {
         MIMEList.put(".ico", "image/vnd.microsoft.icon");
         MIMEList.put(".bmp", "image/bmp");
         // 文本部分
-        // MIMEList.put(".xml", "text/xml");
+        //MIMEList.put(".xml", "text/xml");
         MIMEList.put(".htm", "text/html");
         MIMEList.put(".html", "text/html");
         MIMEList.put(".css", "text/css");

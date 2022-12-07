@@ -27,6 +27,9 @@ public class Request {
     private String queryStr; // For POST, get query in Body
     private Map<String, List<String>> paraMap;
     private final String CRLF = "\r\n";
+    public int statusCode;
+    public String location;
+    public byte[] fileData;
 
     public String getMethod() {
         return method;
@@ -94,7 +97,7 @@ public class Request {
         return list.toArray(new String[0]);
     }
 
-    private byte[] getFileData(String location){
+    public byte[] getFileData(String location){
         byte[] FileData = new byte[0];
         try {
             FileData = FileHandle.readFromFile(location);
@@ -106,16 +109,7 @@ public class Request {
     }
 
     public void handle(){
-        int statusCode;
-        String location;
-        byte[] FileData;
         if(method.equals("GET")){
-            if(getParaValues() || queryStr.startsWith("register")){
-                /** 处理登陆
-                 *
-                return RegisterAndLogin(“类型”，name,password);
-                 */
-            }
             String redirectQuery = redirectList.search(url);
             if(!redirectQuery.equals("")){
                 //301,302
@@ -140,22 +134,26 @@ public class Request {
                 }
             }
 
-            FileData = getFileData(location);
-            if(FileData == null){
+            fileData = getFileData(location);
+            if(fileData == null){
                 statusCode = 404;
                 location = BIND_DIR + NOT_FOUND_RES;
-                FileData = getFileData(location);
+                fileData = getFileData(location);
             }
+
         }
         else if(method.equals("POST")){
+            if(getParaValues("type") != null){
+                returnValue value = RegisterAndLogin.getClientList().deal(getParaValues("type")[0],getParaValues("name")[0],getParaValues("password")[0]);
+                return;
+            }
             location = BIND_DIR + url;
-
         }
         else{
             //405
             statusCode = 405;
             location = BIND_DIR + METHOD_NOT_ALLOWED_RES;
-            FileData = getFileData(location);
+            fileData = getFileData(location);
         }
     }
 }
