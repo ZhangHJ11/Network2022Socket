@@ -105,12 +105,12 @@ public class Request {
         return FileData;
     }
 
-    public returnValue handle(){
+    public void handle(){
         int statusCode;
         String location;
         byte[] FileData;
         if(method.equals("GET")){
-            if(queryStr.startsWith("login") || queryStr.startsWith("register")){
+            if(getParaValues() || queryStr.startsWith("register")){
                 /** 处理登陆
                  *
                 return RegisterAndLogin(“类型”，name,password);
@@ -146,14 +146,16 @@ public class Request {
                 location = BIND_DIR + NOT_FOUND_RES;
                 FileData = getFileData(location);
             }
-            return new returnValue(statusCode,location);
         }
         else if(method.equals("POST")){
             location = BIND_DIR + url;
 
         }
         else{
-
+            //405
+            statusCode = 405;
+            location = BIND_DIR + METHOD_NOT_ALLOWED_RES;
+            FileData = getFileData(location);
         }
     }
 }
