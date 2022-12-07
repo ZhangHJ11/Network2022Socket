@@ -54,11 +54,11 @@ public class Response {
         headInfo.append(CRLF);
 
         // Body
-        headInfo.append(content);
+//        headInfo.append(content);
     }
 
     public Response appendContent(String info) {
-        content.append(info);
+//        content.append(info);
         contentLen += info.getBytes().length;
         return this;
     }
@@ -78,7 +78,7 @@ public class Response {
     private void setContent(String url) {
         try {
             BufferedReader reader = new BufferedReader(
-                    new FileReader(System.getProperty("user.dir") + File.separator + "server" + File.separator + url));
+                    new FileReader(System.getProperty("user.dir") + File.separator + url));
             String tmp;
             while ((tmp = reader.readLine()) != null) {
                 appendContent(tmp);
