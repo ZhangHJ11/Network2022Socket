@@ -70,10 +70,12 @@ public class Response {
         // Return content, blank now, need html file
         setContent(request.getURL());
         headInfo.append(content);
+        // Body
+//        headInfo.append(content);
     }
 
     public Response appendContent(String info) {
-        content.append(info);
+//        content.append(info);
         contentLen += info.getBytes().length;
         return this;
     }

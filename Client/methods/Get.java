@@ -6,6 +6,7 @@ import Client.Requestmessage.RequestHead;
 import Client.Requestmessage.RequestLine;
 import util.InputStreamReader;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ConnectException;
@@ -60,11 +61,33 @@ public class Get implements RequestMethod {
     public void sendRequest(String url, boolean isKeepAlive) throws IOException {
         //实现发送请求
         try(Socket server = new Socket(this.host, this.port)) {
-            HTTPRequest request = assembleRequest(url,isKeepAlive);
-            server.getOutputStream().write(request.toString().getBytes());
+            if (!isKeepAlive){
+                HTTPRequest request = assembleRequest(url,isKeepAlive);
+                server.getOutputStream().write(request.toString().getBytes());
 
-            InputStream in = server.getInputStream();
-            conductResponse(in);
+                InputStream in = server.getInputStream();
+                conductResponse(in);
+            }else {
+                BufferedReader bufferedReader = new BufferedReader(new java.io.InputStreamReader(System.in));
+                while(true){
+                    String cmd = bufferedReader.readLine();
+                    if(Objects.equals(cmd, "stop")){
+//                        send a release message
+                        HTTPRequest request = assembleRequest(url,false);
+                        server.getOutputStream().write(request.toString().getBytes());
+                        InputStream in = server.getInputStream();
+                        conductResponse(in);
+                        break;
+                    }else {
+                        HTTPRequest request = assembleRequest(url,isKeepAlive);
+                        server.getOutputStream().write(request.toString().getBytes());
+
+                        InputStream in = server.getInputStream();
+                        conductResponse(in);
+                    }
+                }
+            }
+
         }
         catch (ConnectException e) {
             e.printStackTrace();
