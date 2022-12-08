@@ -17,8 +17,8 @@ import java.util.Map;
 
 public class Request {
     private InputStream fromClient;
-    private FileTable getFile;
-    private static RedirectList redirectList;
+    private FileTable getFile = new FileTable();
+    private static RedirectList redirectList = RedirectList.getRedirectList();
     private byte[] data = new byte[1024 * 1024]; // 1MB
     private int GETlen;
     private String requestInfo;
@@ -40,7 +40,7 @@ public class Request {
     }
 
     public Request(Socket client) {
-        redirectList = RedirectList.getRedirectList();
+        //redirectList = RedirectList.getRedirectList();
         try {
             fromClient = client.getInputStream();
             GETlen = fromClient.read(data);
@@ -128,7 +128,7 @@ public class Request {
                 //304
                 //文件修改时间
                 Long getTime = getFile.getModifiedTime(location);
-                Long modifyTime = modifiedFileTable.getModifiedTime(location);
+                Long modifyTime = 0L/*modifiedFileTable.getModifiedTime(location)*/;
                 if(getTime >= modifyTime){
                     statusCode = 304;
                     location = BIND_DIR + NOT_MODIFIED_RES;

@@ -15,6 +15,9 @@ public class RedirectList {
     private static RedirectList redirectList = null;
 
     public static RedirectList getRedirectList(){
+        if(RedirectList.redirectList == null){
+            RedirectList.redirectList = new RedirectList();
+        }
         return redirectList;
     }
 

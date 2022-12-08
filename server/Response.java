@@ -89,8 +89,8 @@ public class Response {
      */
     public void pushToClient(int statusCode,String location) {
         createHeadInfo(request.statusCode, request.location);
-        System.out.println(request.statusCode+" " + request.location);
-        System.out.println(headInfo);
+        //System.out.println(request.statusCode+" " + request.location);
+        //System.out.println(headInfo);
         try {
             toClient.write(headInfo.toString());
             toClient.write(content.toString());
