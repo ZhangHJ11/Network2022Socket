@@ -6,7 +6,7 @@ import java.net.Socket;
 
 public class HTTPServer {
 
-    public static String BIND_DIR = "src/main/java/server/Resources";// 资源目录
+    public static String BIND_DIR = "server/server.Resources";// 资源目录
     public static String SERVER_ERROR_RES = "/500.html"; // 凡是服务器错误都返回这个页面
     public static String NOT_FOUND_RES = "/404.html"; // 404 页面
     public static String METHOD_NOT_ALLOWED_RES = "/405.html"; //405 页面
@@ -17,6 +17,10 @@ public class HTTPServer {
     private ServerSocket serverSocket; // get connect with chrome
     public static FileTable modifiedFileTable; // 记录文件修改时间，用于304
 
+    /*public HTTPServer(){
+        HTTPServer.modifiedFileTable = new FileTable();
+        HTTPServer.modifiedFileTable.initInAFolder(BIND_DIR);
+    }*/
     // start sever
     public void start() {
         try {
@@ -33,10 +37,8 @@ public class HTTPServer {
         try {
             Socket client = serverSocket.accept();
             System.out.println("Got a client.");
-
             // GET message
             Request request = new Request(client);
-
             Response response = new Response(client, request);
             response.pushToClient(200,"");
         } catch (IOException e) {

@@ -64,15 +64,15 @@ public class Response {
         // Head Line
         headInfo.append("Date:").append(new Date()).append(CRLF);
         headInfo.append("Server:").append("HOST Sever/0.0.0;charset=GBK").append(CRLF);
-        String ContentType = MIMEList.getMIMEType(location);
+        //String ContentType = MIMEList.getMIMEType(location);
         headInfo.append("Content-type:").append("text/html").append(CRLF);
         headInfo.append("Content-length:").append(contentLen).append(CRLF);
 
         headInfo.append(CRLF);
 
         // Return content, blank now, need html file
-        setContent(request.getURL());
-        headInfo.append(content);
+        //setContent(request.getURL());
+        //headInfo.append(content);
         // Body
 //        headInfo.append(content);
     }
@@ -89,6 +89,8 @@ public class Response {
      */
     public void pushToClient(int statusCode,String location) {
         createHeadInfo(request.statusCode, request.location);
+        System.out.println(request.statusCode+" " + request.location);
+        System.out.println(headInfo);
         try {
             toClient.write(headInfo.toString());
             toClient.write(content.toString());

@@ -30,11 +30,11 @@ public class RegisterAndLogin {
         if ("register".equals(type)) {
             if (!register(name, password)) {
                 String location = HTTPServer.BIND_DIR + REGISTER_FAIL_DIR;
-                answer = new returnValue(200, location, Arrays.toString(request.getFileData(location)));
+                answer = new returnValue(200, location, request.getFileData(location));
             }
             else {
                 String location = HTTPServer.BIND_DIR + REGISTER_SUCCESS_DIR;
-                answer = new returnValue(200,location,Arrays.toString(request.getFileData(location)));
+                answer = new returnValue(200,location,request.getFileData(location));
             }
         } else if ("login".equals(type)) {
             boolean registerRet = login(name, password);
@@ -45,7 +45,7 @@ public class RegisterAndLogin {
             else {
                 location = HTTPServer.BIND_DIR + LOGIN_SUCCESS_DIR;
             }
-            answer = new returnValue(200, location,Arrays.toString(request.getFileData(location)));
+            answer = new returnValue(200, location,request.getFileData(location));
         }
         return answer;
     }

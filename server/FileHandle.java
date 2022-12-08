@@ -3,10 +3,6 @@ package server;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
-
-import static server.HTTPServer.BIND_DIR;
-import static server.HTTPServer.NOT_FOUND_RES;
 
 /**
  * @author Kevin

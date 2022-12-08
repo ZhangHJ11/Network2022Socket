@@ -9,7 +9,7 @@ public class ClientMain {
         int port = 8888;
         String host = "127.0.0.1";
         Gettest gettest = new Gettest();
-        gettest.PersistentGet(port, host);
+        gettest.NonPersistentGet(port, host);
         // Login login = new Login();
         // login.login();
     }
