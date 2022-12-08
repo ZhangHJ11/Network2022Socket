@@ -6,8 +6,8 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 
 public class Login {
-    public HashMap<String, String> login() throws IOException {
-        HashMap<String, String> hashMap = new HashMap<>();
+    public String login() throws IOException {
+        String hashMap = new String();
         String username;
         String password;
         System.out.println("You are trying to connect to a socket server.");
@@ -19,7 +19,7 @@ public class Login {
         username = bufferedReader.readLine();
         System.out.println("Your password:");
         password = bufferedReader.readLine();
-        hashMap.put(username, password);
+        hashMap="&username"+username+"&password"+password+System.lineSeparator();
         return hashMap;
     }
 }

@@ -3,8 +3,10 @@ package Client.methods;
 import Client.Connect;
 import Client.Connections;
 import Client.Requestmessage.HTTPRequest;
+import Client.Requestmessage.RequestBody;
 import Client.Requestmessage.RequestHead;
 import Client.Requestmessage.RequestLine;
+import server.Request;
 import util.InputStreamReader;
 
 import java.io.IOException;
@@ -23,7 +25,7 @@ public class Post implements RequestMethod {
         this.pool = pool;
     }
 
-    private HTTPRequest assembleRequest(String url,boolean isKeepAlive){
+    private HTTPRequest assembleRequest(String url,boolean isKeepAlive,RequestBody body){
         RequestLine requestline = new RequestLine("POST", url);
         RequestHead requestHead = new RequestHead();
 
@@ -37,7 +39,7 @@ public class Post implements RequestMethod {
         }
         requestHead.put("Connection", isKeepAlive?"Keep-Alive":"");
 
-        return new HTTPRequest(requestline, requestHead, null);
+        return new HTTPRequest(requestline, requestHead, body);
     }
 
     public void conductResponse(InputStream inputStream) throws IOException {
@@ -56,10 +58,10 @@ public class Post implements RequestMethod {
         }
     }
 
-    public void sendRequest(String url, boolean isKeepAlive) throws IOException {
+    public void sendRequest(String url, boolean isKeepAlive, RequestBody body) throws IOException {
         //实现发送请求
         try(Socket server = new Socket(this.host, this.port)) {
-            HTTPRequest request = assembleRequest(url,isKeepAlive);
+            HTTPRequest request = assembleRequest(url,isKeepAlive,body);
             server.getOutputStream().write(request.toString().getBytes());
 
             InputStream in = server.getInputStream();
