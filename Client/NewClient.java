@@ -27,19 +27,26 @@ public class NewClient {
         BufferedReader bufferedReader = new BufferedReader(new java.io.InputStreamReader(System.in));
         do {
             String cmd = bufferedReader.readLine();
-            System.out.println(cmd);
-            if (Objects.equals("stop", cmd)) {
+//            System.out.println(cmd);
+            if (Objects.equals("stop", cmd.substring(0, 4))) {
+//                stop ./Resources/index.html
                 switchMode("Get");
-                requestMethod.sendRequest(host, new RequestBody());
+                String url = cmd.substring(5);
                 connection.setKeepAlive(false);
+                requestMethod.sendRequest(url, new RequestBody());
+                System.out.println("connection released!!!");
             } else if (Objects.equals("Post", cmd)) {
                 String url = cmd.substring(3);
                 switchMode("POST");
                 requestMethod.sendRequest(url, null);
             } else if (Objects.equals("get", cmd.substring(0, 3))) {
+//                get ./Resources/index.html
                 String url = cmd.substring(4);
                 switchMode("GET");
                 requestMethod.sendRequest(url, null);
+            }else {
+                System.out.println("This is an invalid input.");
+                System.out.println("please input again");
             }
         } while (connection.isPersistent());
 

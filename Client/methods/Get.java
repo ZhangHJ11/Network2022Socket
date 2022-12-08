@@ -42,7 +42,7 @@ public class Get implements RequestMethod {
     }
 
     public void conductResponse(InputStream inputStream) throws IOException {
-        System.out.println(InputStreamReader.readAll(inputStream));
+//        System.out.println(InputStreamReader.readAll(inputStream));
         String res = InputStreamReader.readAll(inputStream);
         String headline = res.substring(0, res.indexOf('\n'));
         String[] head = headline.split(" ");

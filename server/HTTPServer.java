@@ -48,6 +48,10 @@ public class HTTPServer {
                     Request Request = new Request(client);
                     Response Response = new Response(client, Request);
                     Response.pushToClient(200);
+                    if(!Request.isKeepAlive()){
+                        client.close();
+                        break;
+                    }
                 }
             }
         } catch (IOException e) {

@@ -64,7 +64,7 @@ public class Request {
      * 请求行的数据
      */
     private void parseGETInfo() {
-        // System.out.println(requestInfo);
+        System.out.println(requestInfo);
         method = requestInfo.substring(0, requestInfo.indexOf("/"));
         method = method.substring(0, 3);
         System.out.println(method);

@@ -10,7 +10,7 @@ public class ClientMain {
     public static void main(String[] args) throws IOException {
         int port = 8888;
         String host = "127.0.0.1";
-        NewClient client=new NewClient(port,host,false);
+        NewClient client=new NewClient(port,host,true);
 
         /*
         Gettest gettest = new Gettest();
