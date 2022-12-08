@@ -33,9 +33,6 @@ nd-search-box .blind-search-area{background-color:#fff;text-align:left;display:i
         };
     </script>
 
-    
-
-
 
 
 
