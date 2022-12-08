@@ -17,5 +17,6 @@ public class ClientMain {
         Login login=new Login();
         String input=login.login();//进行注册
         client.Login(input,true);
+
     }
 }
