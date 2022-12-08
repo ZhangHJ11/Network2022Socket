@@ -1,4 +1,5 @@
 package server;
+
 import com.sun.corba.se.spi.activation.Server;
 import server.redirectList.RedirectList;
 import server.UserService.RegisterAndLogin;
@@ -41,7 +42,7 @@ public class Request {
     }
 
     public Request(Socket client) {
-        //redirectList = RedirectList.getRedirectList();
+        // redirectList = RedirectList.getRedirectList();
         try {
             fromClient = client.getInputStream();
             GETlen = fromClient.read(data);
@@ -63,15 +64,15 @@ public class Request {
      * 请求行的数据
      */
     private void parseGETInfo() {
-        //System.out.println(requestInfo);
+        // System.out.println(requestInfo);
         method = requestInfo.substring(0, requestInfo.indexOf("/"));
-        method = method.substring(0,3);
+        method = method.substring(0, 3);
         System.out.println(method);
         int tmp1 = requestInfo.indexOf("/") + 1;
         int tmp2 = requestInfo.indexOf("HTTP/") - 1;
         url = requestInfo.substring(tmp1, tmp2);
-        //版本默认 HTTP/1.1 不做处理
-        //post 才有实体主体
+        // 版本默认 HTTP/1.1 不做处理
+        // post 才有实体主体
         if (method.equals("POST")) {
             queryStr = requestInfo.substring(requestInfo.lastIndexOf(CRLF)).trim();
         }
@@ -89,8 +90,16 @@ public class Request {
         }
     }
 
+    public boolean isKeepAlive() {
+        if ((requestInfo.indexOf("Keep-Alive") != -1)) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * 通过首部字段号查询之后的值
+     * 
      * @param key
      * @return
      */
@@ -102,65 +111,62 @@ public class Request {
         return list.toArray(new String[0]);
     }
 
-    public byte[] getFileData(String location){
+    public byte[] getFileData(String location) {
         byte[] FileData = new byte[0];
         try {
             FileData = FileHandle.readFromFile(System.getProperty("user.dir") + File.separator + location);
-        } catch (FileNotFoundException ex){
+        } catch (FileNotFoundException ex) {
             System.out.println("未找到文件");
             return null;
         }
         return FileData;
     }
 
-    public void handle(){
-        if(method.equals("GET")){
+    public void handle() {
+        if (method.equals("GET")) {
             System.out.println(url);
             String redirectQuery = redirectList.search(url);
             System.out.println(redirectQuery);
-            if(!redirectQuery.equals("")){
-                //301,302
-                statusCode = Integer.parseInt(redirectQuery.substring(0,3));
+            if (!redirectQuery.equals("")) {
+                // 301,302
+                statusCode = Integer.parseInt(redirectQuery.substring(0, 3));
                 location = BIND_DIR + redirectQuery.substring(3);
-            }
-            else{
+            } else {
                 statusCode = 200;
                 location = BIND_DIR + url;
-                //304
-                //文件修改时间
+                // 304
+                // 文件修改时间
                 Long getTime = getFile.getModifiedTime(location);
-                Long modifyTime = 0L/*modifiedFileTable.getModifiedTime(location)*/;
-                if(getTime >= modifyTime){
+                Long modifyTime = 0L/* modifiedFileTable.getModifiedTime(location) */;
+                if (getTime >= modifyTime) {
                     statusCode = 304;
                     location = BIND_DIR + NOT_MODIFIED_RES;
-                }
-                else {
-                    //修改文件
+                } else {
+                    // 修改文件
                     getFile.modify(location);
                 }
             }
-            //System.out.println(statusCode);
-            //System.out.println(location);
+            // System.out.println(statusCode);
+            // System.out.println(location);
             fileData = getFileData(location);
-            if(fileData == null){
+            if (fileData == null) {
                 statusCode = 404;
                 location = BIND_DIR + NOT_FOUND_RES;
                 fileData = getFileData(location);
             }
 
-        }
-        else if(method.equals("POST")){
-            if(getParaValues("type") != null){
-                returnValue value = RegisterAndLogin.getClientList().deal(getParaValues("type")[0],getParaValues("name")[0],getParaValues("password")[0]);
+        } else if (method.equals("POST")) {
+            if (getParaValues("type") != null) {
+                returnValue value = RegisterAndLogin.getClientList().deal(getParaValues("type")[0],
+                        getParaValues("name")[0], getParaValues("password")[0]);
                 location = value.location;
                 statusCode = value.statusCode;
                 fileData = value.FileData;
                 return;
             }
             location = BIND_DIR + url;
-        }
-        else{
-            //405
+        } else {
+            // 405
             statusCode = 405;
             location = BIND_DIR + METHOD_NOT_ALLOWED_RES;
             fileData = getFileData(location);

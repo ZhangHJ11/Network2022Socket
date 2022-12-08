@@ -13,7 +13,7 @@ import java.util.Date;
 public class Response {
     private Request request;
     private BufferedWriter toClient;
-    //private StringBuilder content = new StringBuilder();
+    // private StringBuilder content = new StringBuilder();
     private String content;
     private StringBuilder headInfo = new StringBuilder();
     private int contentLen = 0; // bytes number;
@@ -54,44 +54,46 @@ public class Response {
             case 405:
                 headInfo.append("NOT Permitted").append(CRLF);
                 break;
-            case 500: //服务端错误
+            case 500: // 服务端错误
                 headInfo.append("Internal Server Error").append(CRLF);
                 break;
         }
-        if(statusCode == 301){
+        if (statusCode == 301) {
             headInfo.append("Location: ").append(location);
         }
-        // Head  Line
+        // Head Line
+        setContent(request.getURL());
         headInfo.append("Date:").append(new Date()).append(CRLF);
         headInfo.append("Server:").append("HOST Sever/0.0.0;charset=GBK").append(CRLF);
-        //String ContentType = MIMEList.getMIMEType(location);
+        // String ContentType = MIMEList.getMIMEType(location);
         headInfo.append("Content-type:").append("text/html").append(CRLF);
         headInfo.append("Content-length:").append(contentLen).append(CRLF);
 
         headInfo.append(CRLF);
 
         // Return content, blank now, need html file
-        setContent(request.getURL());
+
         headInfo.append(content);
         // Body
-//        headInfo.append(content);
+        // headInfo.append(content);
     }
 
     public Response appendContent(String info) {
-//        content.append(info);
+        // content.append(info);
         contentLen += info.getBytes().length;
         return this;
     }
 
     /**
      * 返回客户端
+     * 
      * @param statusCode
      */
-    public void pushToClient(int statusCode,String location) {
+    public void pushToClient(int statusCode) {
         createHeadInfo(request.statusCode, request.location);
-        //System.out.println(request.statusCode+" " + request.location);
-        //System.out.println(headInfo);
-        //System.out.println(content);
+        // System.out.println(request.statusCode+" " + request.location);
+        // System.out.println(headInfo);
+        // System.out.println(content);
 
         try {
             toClient.write(headInfo.toString());

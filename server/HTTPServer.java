@@ -9,18 +9,20 @@ public class HTTPServer {
     public static String BIND_DIR = "server/";// 资源目录
     public static String SERVER_ERROR_RES = "/500.html"; // 凡是服务器错误都返回这个页面
     public static String NOT_FOUND_RES = "/404.html"; // 404 页面
-    public static String METHOD_NOT_ALLOWED_RES = "/405.html"; //405 页面
-    public static String NOT_MODIFIED_RES = "/304.html"; //405 页面
+    public static String METHOD_NOT_ALLOWED_RES = "/405.html"; // 405 页面
+    public static String NOT_MODIFIED_RES = "/304.html"; // 405 页面
     public static String POST_SUCCESS_RES = "/post_success.html";
     public static int DEFAULT_PORT = 8888;
     public static String HOSTNAME = "127.0.0.1";
     private ServerSocket serverSocket; // get connect with chrome
     public static FileTable modifiedFileTable; // 记录文件修改时间，用于304
 
-    /*public HTTPServer(){
-        HTTPServer.modifiedFileTable = new FileTable();
-        HTTPServer.modifiedFileTable.initInAFolder(BIND_DIR);
-    }*/
+    /*
+     * public HTTPServer(){
+     * HTTPServer.modifiedFileTable = new FileTable();
+     * HTTPServer.modifiedFileTable.initInAFolder(BIND_DIR);
+     * }
+     */
     // start sever
     public void start() {
         try {
@@ -38,9 +40,16 @@ public class HTTPServer {
             Socket client = serverSocket.accept();
             System.out.println("Got a client.");
             // GET message
-            Request request = new Request(client);
-            Response response = new Response(client, request);
-            response.pushToClient(200,"");
+            Request firstRequest = new Request(client);
+            Response firstResponse = new Response(client, firstRequest);
+            firstResponse.pushToClient(200);
+            if (firstRequest.isKeepAlive()) {
+                while (true) {
+                    Request Request = new Request(client);
+                    Response Response = new Response(client, Request);
+                    Response.pushToClient(200);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Client error.");

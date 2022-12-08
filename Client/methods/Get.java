@@ -2,6 +2,7 @@ package Client.methods;
 
 import Client.Connections;
 import Client.Requestmessage.HTTPRequest;
+import Client.Requestmessage.RequestBody;
 import Client.Requestmessage.RequestHead;
 import Client.Requestmessage.RequestLine;
 import util.InputStreamReader;
@@ -24,7 +25,6 @@ public class Get implements RequestMethod {
         this.pool = pool;
     }
 
-
     private HTTPRequest assembleRequest(String url, boolean isKeepAlive) {
         RequestLine requestline = new RequestLine("GET", url);
         RequestHead requestHead = new RequestHead();
@@ -43,12 +43,12 @@ public class Get implements RequestMethod {
     }
 
     public void conductResponse(InputStream inputStream) throws IOException {
-//        System.out.println(InputStreamReader.readAll(inputStream));
+        // System.out.println(InputStreamReader.readAll(inputStream));
         String res = InputStreamReader.readAll(inputStream);
         String headline = res.substring(0, res.indexOf('\n'));
         String[] head = headline.split(" ");
         switch (head[1]) {
-//            status code
+            // status code
             case "200":
                 System.out.println(res);
                 break;
@@ -58,7 +58,7 @@ public class Get implements RequestMethod {
         }
     }
 
-    public void sendRequest(String url, boolean isKeepAlive) throws IOException {
+    public void sendRequest(String url, boolean isKeepAlive, RequestBody body) throws IOException {
         Socket server = null;
         try {
             server = new Socket(this.host, this.port);
@@ -66,7 +66,7 @@ public class Get implements RequestMethod {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        //实现发送请求
+        // 实现发送请求
         if (!isKeepAlive) {
             HTTPRequest request = assembleRequest(url, isKeepAlive);
             server.getOutputStream().write(request.toString().getBytes());
@@ -79,7 +79,7 @@ public class Get implements RequestMethod {
             while (true) {
                 String cmd = bufferedReader.readLine();
                 if (Objects.equals(cmd, "stop")) {
-//                        send a release message
+                    // send a release message
                     HTTPRequest request = assembleRequest(url, false);
                     server.getOutputStream().write(request.toString().getBytes());
 
