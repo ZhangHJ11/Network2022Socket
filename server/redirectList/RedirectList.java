@@ -15,13 +15,14 @@ public class RedirectList {
     private static RedirectList redirectList = null;
 
     public static RedirectList getRedirectList(){
+        if(RedirectList.redirectList == null){
+            RedirectList.redirectList = new RedirectList();
+        }
         return redirectList;
     }
 
     public static HashMap<String,String> redirectLists = new HashMap<>();
     public static HashMap<String,Integer> redirectType = new HashMap<>();
-
-
     private RedirectList(){
         redirectLists.put("/301origin.html", "/301dest.html");
         redirectType.put("/301origin.html", 301);
@@ -35,7 +36,11 @@ public class RedirectList {
         }
         return redirectType.get(originURL) + redirectLists.get(originURL);
     }
-    
+
+    /**
+     * 重新读取配置文件
+     * @param path
+     */
     private void paraseConfig(String path) {
         String []line;
         File file = new File(path);

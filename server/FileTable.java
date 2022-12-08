@@ -1,7 +1,6 @@
 package server;
 
 import java.io.File;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -30,7 +29,7 @@ public class FileTable {
             if (tmpList[i].isFile()) {
                 File file1 = tmpList[i];
                 String filePath = file1.toString();
-                filePath=filePath.replace((char)92,'/');
+                filePath = filePath.replace((char)92,'/');
                 files.put(filePath, System.currentTimeMillis());
             }
         }
