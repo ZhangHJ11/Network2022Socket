@@ -6,7 +6,6 @@ import Client.Requestmessage.HTTPRequest;
 import Client.Requestmessage.RequestBody;
 import Client.Requestmessage.RequestHead;
 import Client.Requestmessage.RequestLine;
-import server.Request;
 import util.InputStreamReader;
 
 import java.io.IOException;
@@ -19,10 +18,7 @@ public class Post implements RequestMethod {
     private int port;
     private Connections pool;
 
-    public Post(String host, int port, Connections pool) {
-        this.host = host;
-        this.port = port;
-        this.pool = pool;
+    public Post(Connect connection) {
     }
 
     private HTTPRequest assembleRequest(String url,boolean isKeepAlive,RequestBody body){
@@ -58,10 +54,10 @@ public class Post implements RequestMethod {
         }
     }
 
-    public void sendRequest(String url, boolean isKeepAlive, RequestBody body) throws IOException {
+    public void sendRequest(String url, RequestBody body) throws IOException {
         //实现发送请求
         try(Socket server = new Socket(this.host, this.port)) {
-            HTTPRequest request = assembleRequest(url,isKeepAlive,body);
+            HTTPRequest request = assembleRequest(url,false,body);
             server.getOutputStream().write(request.toString().getBytes());
 
             InputStream in = server.getInputStream();

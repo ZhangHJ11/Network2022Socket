@@ -15,7 +15,7 @@ public class Connections {
     public Connect getConnection(String host, int port, boolean isKeepAlive) throws IOException {
         Connect con = pool.get(host);
         if (con != null) {
-            if (con.isClosed()) {
+            if (!con.isPersistent()) {
                 pool.remove(host);
             } else {
                 return con;

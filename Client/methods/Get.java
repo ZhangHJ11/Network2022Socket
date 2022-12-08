@@ -1,7 +1,9 @@
 package Client.methods;
 
+import Client.Connect;
 import Client.Connections;
 import Client.Requestmessage.HTTPRequest;
+import Client.Requestmessage.RequestBody;
 import Client.Requestmessage.RequestHead;
 import Client.Requestmessage.RequestLine;
 import util.InputStreamReader;
@@ -9,41 +11,38 @@ import util.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.util.Objects;
 
 public class Get implements RequestMethod {
-    private String host;
-    private int port;
-    private Connections pool;
+    Connect connection;
 
-    public Get(String host, int port, Connections pool) {
-        this.host = host;
-        this.port = port;
-        this.pool = pool;
+    public Get(Connect connection) {
+        this.connection=connection;
     }
 
 
-    private HTTPRequest assembleRequest(String url, boolean isKeepAlive) {
+    private HTTPRequest assembleRequest(String url) {
         RequestLine requestline = new RequestLine("GET", url);
         RequestHead requestHead = new RequestHead();
 
         requestHead.put("Accept", "*/*");
         requestHead.put("Accept-Language", "zh-cn");
         requestHead.put("User-Agent", "Test-HTTPClient");
-        if (port != 80 && port != 443) {
-            requestHead.put("Host", host + ':' + port);
+        if (connection.getPort() != 80 && connection.getPort() != 443) {
+            requestHead.put("Host", connection.getHost() + ':' + connection.getPort());
         } else {
-            requestHead.put("Host", host); // 访问默认端口的时候是不需要端口号的
+            requestHead.put("Host", connection.getHost()); // 访问默认端口的时候是不需要端口号的
         }
-        requestHead.put("Connection", isKeepAlive ? "Keep-Alive" : "");
+        requestHead.put("Connection", connection.isPersistent() ? "Keep-Alive" : "");
 
         return new HTTPRequest(requestline, requestHead, null);
     }
 
     public void conductResponse(InputStream inputStream) throws IOException {
-//        System.out.println(InputStreamReader.readAll(inputStream));
+        System.out.println(InputStreamReader.readAll(inputStream));
         String res = InputStreamReader.readAll(inputStream);
         String headline = res.substring(0, res.indexOf('\n'));
         String[] head = headline.split(" ");
@@ -58,44 +57,11 @@ public class Get implements RequestMethod {
         }
     }
 
-    public void sendRequest(String url, boolean isKeepAlive) throws IOException {
-        Socket server = null;
-        try {
-            server = new Socket(this.host, this.port);
-            server.setKeepAlive(isKeepAlive);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        //实现发送请求
-        if (!isKeepAlive) {
-            HTTPRequest request = assembleRequest(url, isKeepAlive);
-            server.getOutputStream().write(request.toString().getBytes());
+    public void sendRequest(String url, RequestBody body) throws IOException {
 
-            InputStream in = server.getInputStream();
-            conductResponse(in);
-            server.close();
-        } else {
-            BufferedReader bufferedReader = new BufferedReader(new java.io.InputStreamReader(System.in));
-            while (true) {
-                String cmd = bufferedReader.readLine();
-                if (Objects.equals(cmd, "stop")) {
-//                        send a release message
-                    HTTPRequest request = assembleRequest(url, false);
-                    server.getOutputStream().write(request.toString().getBytes());
-
-                    InputStream in = server.getInputStream();
-                    conductResponse(in);
-                    server.close();
-                    break;
-                } else {
-                    HTTPRequest request = assembleRequest(url, isKeepAlive);
-                    server.getOutputStream().write(request.toString().getBytes());
-
-                    InputStream in = server.getInputStream();
-                    conductResponse(in);
-                }
-            }
-        }
+        HTTPRequest request=assembleRequest(url);
+        connection.getSendStream().write(request.toString().getBytes());
+        conductResponse(connection.getReceiveStream());
 
     }
 }

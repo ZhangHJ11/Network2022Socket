@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class Connect {
-    private Socket ClientSocket;
-    private InputStream ReceiveStream;
-    private OutputStream SendStream;
-    private int port;
-    private String host;
+    private Socket server;
+    private InputStream receiveStream;
+    private OutputStream sendStream;
+    private final int port;
+    private final String host;
     private boolean isKeepAlive;
 
     public Connect(String host, int port, boolean isKeepAlive) {
@@ -32,30 +33,34 @@ public class Connect {
     }
 
     public InputStream getReceiveStream() {
-        return ReceiveStream;
+        return receiveStream;
     }
 
+    public Socket getServer() {
+        return this.server;
+    }
     public OutputStream getSendStream() {
-        return SendStream;
-    }
-
-    public boolean isClosed() {
-        return ClientSocket.isClosed();
+        return sendStream;
     }
 
     public void close() throws IOException {
-        ClientSocket.close();
+        server.close();
     }
 
     public void creat() {
         try {
-            ClientSocket = new Socket(host, port);
-            ClientSocket.setKeepAlive(isKeepAlive);
-            ReceiveStream = ClientSocket.getInputStream();
-            SendStream = ClientSocket.getOutputStream();
+            server = new Socket(host, port);
+            server.setKeepAlive(isKeepAlive);
+            receiveStream = server.getInputStream();
+            sendStream = server.getOutputStream();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public void setKeepAlive(boolean isKeepAlive) throws SocketException {
+        server.setKeepAlive(isKeepAlive);
+        this.isKeepAlive=isKeepAlive;
     }
 }
