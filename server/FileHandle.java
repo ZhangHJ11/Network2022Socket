@@ -1,6 +1,8 @@
 package server;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
@@ -38,11 +40,14 @@ public class FileHandle {
      * @return
      * @throws FileNotFoundException 将FileLocation以字节形式读出
      */
-    public static final byte[] readFromFile(String FileLocation) throws FileNotFoundException {
-        InputStream in = null;
-        in = new FileInputStream(FileLocation);
-        byte[] data = getResAsStream(in);
-        return data;
+    public static byte[] readFromFile(String FileLocation) throws FileNotFoundException {
+        InputStream in;
+        try {
+            in = Files.newInputStream(Paths.get(FileLocation));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return getResAsStream(in);
     }
 
     /**

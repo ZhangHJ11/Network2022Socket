@@ -5,6 +5,7 @@ import server.UserService.RegisterAndLogin;
 import server.redirectList.RedirectList;
 import static server.HTTPServer.*;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -104,7 +105,7 @@ public class Request {
     public byte[] getFileData(String location){
         byte[] FileData = new byte[0];
         try {
-            FileData = FileHandle.readFromFile(location);
+            FileData = FileHandle.readFromFile(System.getProperty("user.dir") + File.separator + location);
         } catch (FileNotFoundException ex){
             System.out.println("未找到文件");
             return null;
@@ -138,7 +139,8 @@ public class Request {
                     getFile.modify(location);
                 }
             }
-
+            //System.out.println(statusCode);
+            //System.out.println(location);
             fileData = getFileData(location);
             if(fileData == null){
                 statusCode = 404;
