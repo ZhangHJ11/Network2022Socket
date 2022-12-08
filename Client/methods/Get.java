@@ -25,7 +25,7 @@ public class Get implements RequestMethod {
     }
 
 
-    private HTTPRequest assembleRequest(String url,boolean isKeepAlive) {
+    private HTTPRequest assembleRequest(String url, boolean isKeepAlive) {
         RequestLine requestline = new RequestLine("GET", url);
         RequestHead requestHead = new RequestHead();
 
@@ -37,7 +37,7 @@ public class Get implements RequestMethod {
         } else {
             requestHead.put("Host", host); // 访问默认端口的时候是不需要端口号的
         }
-        requestHead.put("Connection", isKeepAlive?"Keep-Alive":"");
+        requestHead.put("Connection", isKeepAlive ? "Keep-Alive" : "");
 
         return new HTTPRequest(requestline, requestHead, null);
     }
@@ -45,9 +45,9 @@ public class Get implements RequestMethod {
     public void conductResponse(InputStream inputStream) throws IOException {
 //        System.out.println(InputStreamReader.readAll(inputStream));
         String res = InputStreamReader.readAll(inputStream);
-        String headline = res.substring(0,res.indexOf('\n'));
+        String headline = res.substring(0, res.indexOf('\n'));
         String[] head = headline.split(" ");
-        switch (head[1]){
+        switch (head[1]) {
 //            status code
             case "200":
                 System.out.println(res);
@@ -59,38 +59,43 @@ public class Get implements RequestMethod {
     }
 
     public void sendRequest(String url, boolean isKeepAlive) throws IOException {
+        Socket server = null;
+        try {
+            server = new Socket(this.host, this.port);
+            server.setKeepAlive(isKeepAlive);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         //实现发送请求
-        try(Socket server = new Socket(this.host, this.port)) {
-            if (!isKeepAlive){
-                HTTPRequest request = assembleRequest(url,isKeepAlive);
-                server.getOutputStream().write(request.toString().getBytes());
+        if (!isKeepAlive) {
+            HTTPRequest request = assembleRequest(url, isKeepAlive);
+            server.getOutputStream().write(request.toString().getBytes());
 
-                InputStream in = server.getInputStream();
-                conductResponse(in);
-            }else {
-                BufferedReader bufferedReader = new BufferedReader(new java.io.InputStreamReader(System.in));
-                while(true){
-                    String cmd = bufferedReader.readLine();
-                    if(Objects.equals(cmd, "stop")){
+            InputStream in = server.getInputStream();
+            conductResponse(in);
+            server.close();
+        } else {
+            BufferedReader bufferedReader = new BufferedReader(new java.io.InputStreamReader(System.in));
+            while (true) {
+                String cmd = bufferedReader.readLine();
+                if (Objects.equals(cmd, "stop")) {
 //                        send a release message
-                        HTTPRequest request = assembleRequest(url,false);
-                        server.getOutputStream().write(request.toString().getBytes());
-                        InputStream in = server.getInputStream();
-                        conductResponse(in);
-                        break;
-                    }else {
-                        HTTPRequest request = assembleRequest(url,isKeepAlive);
-                        server.getOutputStream().write(request.toString().getBytes());
+                    HTTPRequest request = assembleRequest(url, false);
+                    server.getOutputStream().write(request.toString().getBytes());
 
-                        InputStream in = server.getInputStream();
-                        conductResponse(in);
-                    }
+                    InputStream in = server.getInputStream();
+                    conductResponse(in);
+                    server.close();
+                    break;
+                } else {
+                    HTTPRequest request = assembleRequest(url, isKeepAlive);
+                    server.getOutputStream().write(request.toString().getBytes());
+
+                    InputStream in = server.getInputStream();
+                    conductResponse(in);
                 }
             }
+        }
 
-        }
-        catch (ConnectException e) {
-            e.printStackTrace();
-        }
     }
 }
