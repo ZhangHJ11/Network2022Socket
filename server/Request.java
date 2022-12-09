@@ -29,6 +29,9 @@ public class Request {
         return url;
     }
 
+    public void setUrl(String newUrl){
+        this.url = newUrl;
+    }
 
     public Request(Socket client) {
         try {

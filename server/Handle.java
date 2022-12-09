@@ -15,6 +15,7 @@ public class Handle {
     public String method ;
     public String url;
     public int statusCode;
+    public String location;
     public RedirectList redirectList = RedirectList.getRedirectList();
     public Handle(Request request){
         this.request = request;
@@ -22,14 +23,15 @@ public class Handle {
         this.url = request.getURL();
     }
     public void handle() {
-        String location;
         byte[] fileData;
         if (method.equals("GET")) {
             String redirectQuery = redirectList.search(url);
             if (!redirectQuery.equals("")) {
                 // 301,302
                 statusCode = Integer.parseInt(redirectQuery.substring(10, 13));
-                location = redirectQuery.substring(0);
+                location = redirectQuery;
+                request.setUrl(location);
+                return;
             }
             else {
                 statusCode = 200;
@@ -40,7 +42,7 @@ public class Handle {
                 Long modifyTime = 0L/* modifiedFileTable.getModifiedTime(location) */;
                 if (getTime >= modifyTime) {
                     statusCode = 304;
-                    location = BIND_DIR + NOT_MODIFIED_RES;
+                    location = NOT_MODIFIED_RES;
                 } else {
                     // 修改文件
                     getFile.modify(location);

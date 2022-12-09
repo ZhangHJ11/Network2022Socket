@@ -8,7 +8,6 @@ import java.net.Socket;
 
 public class HTTPServer {
 
-    public static String BIND_DIR = "server/";// 资源目录
     public static String SERVER_ERROR_RES = "/500.html"; // 凡是服务器错误都返回这个页面
     public static String NOT_FOUND_RES = "/404.html"; // 404 页面
     public static String METHOD_NOT_ALLOWED_RES = "/405.html"; // 405 页面

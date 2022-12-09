@@ -53,6 +53,7 @@ public class Response {
             case 500: // 服务端错误
                 headInfo.append("Internal Server Error").append(CRLF);
                 break;
+            default: break;
         }
         if (statusCode == 301) {
             headInfo.append("Location: ").append(request.getURL()).append(CRLF);
@@ -83,6 +84,7 @@ public class Response {
     public void pushToClient(int statusCode) {
         createHeadInfo(statusCode);
         System.out.println(headInfo);
+        System.out.println(content);
         try {
             toClient.write(headInfo.toString());
             toClient.write(content.toString());
