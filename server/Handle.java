@@ -6,8 +6,10 @@ import util.FileTable;
 import util.GetFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static server.HTTPServer.*;
+
 
 public class Handle {
     Request request;
@@ -17,13 +19,16 @@ public class Handle {
     public int statusCode;
     public String location;
     public RedirectList redirectList = RedirectList.getRedirectList();
+    public static ArrayList<String> fileList;
     public Handle(Request request){
         this.request = request;
         this.method = request.getMethod();
         this.url = request.getURL();
+        fileList = setFileList();
     }
+
+
     public void handle() {
-        byte[] fileData;
         if (method.equals("GET")) {
             String redirectQuery = redirectList.search(url);
             if (!redirectQuery.equals("")) {
@@ -43,18 +48,17 @@ public class Handle {
                 if (getTime >= modifyTime) {
                     statusCode = 304;
                     location = NOT_MODIFIED_RES;
+                    request.setUrl(location);
                 } else {
                     // 修改文件
                     getFile.modify(location);
                 }
             }
-            System.out.println(statusCode + " " + location);
-            try {
-                fileData = GetFile.getFile(location).getBytes();
-            }catch (IOException e){
-                e.printStackTrace();
+            //System.out.println(statusCode + " " + location);
+            if(!fileList.contains(location)){
                 statusCode = 404;
                 location = NOT_FOUND_RES;
+                request.setUrl(location);
             }
         }
         else if (method.equals("POST")) {
@@ -70,12 +74,42 @@ public class Handle {
             // 405
             statusCode = 405;
             location = METHOD_NOT_ALLOWED_RES;
-            try {
-                fileData = GetFile.getFile(location).getBytes();
-            }catch (IOException e){
-                e.printStackTrace();
-            }
+            request.setUrl(location);
         }
     }
 
+    public static boolean ifFileIn(String url){
+        return fileList.contains(url);
+    }
+
+    /**
+     * 建立文件表
+     */
+    private ArrayList<String> setFileList(){
+        ArrayList<String> list = new ArrayList<>();
+        list.add("Resources/2.png");
+        list.add("Resources/3.zip");
+        list.add("Resources/4.png");
+        list.add("Resources/301origin.html");
+        list.add("Resources/301dest.html");
+        list.add("Resources/302dest.html");
+        list.add("Resources/302origin.html");
+        list.add("Resources/304.html");
+        list.add("Resources/404.html");
+        list.add("Resources/405.html");
+        list.add("Resources/500.html");
+        list.add("Resources/index.html");
+        list.add("Resources/lab6.png");
+        list.add("Resources/loginSuccess.html");
+        list.add("Resources/loginFail.html");
+        list.add("Resources/pic.png");
+        list.add("Resources/post.html");
+        list.add("Resources/post_success.html");
+        list.add("Resources/registerFail.html");
+        list.add("Resources/registerSuccess.html");
+        list.add("Resources/temp.txt");
+        list.add("Resources/testForm");
+        list.add("Resources/uploadSuccess.html");
+        return list;
+    }
 }
