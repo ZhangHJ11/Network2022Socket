@@ -1,4 +1,4 @@
-package server;
+package util;
 
 import java.io.File;
 import java.util.HashMap;

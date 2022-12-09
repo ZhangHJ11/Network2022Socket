@@ -1,4 +1,6 @@
-package server;
+package util;
+
+import server.MIMETypes;
 
 import java.io.*;
 import java.nio.file.Files;

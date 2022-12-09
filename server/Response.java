@@ -1,19 +1,16 @@
 package server;
 
-import java.io.BufferedReader;
+import util.GetFile;
+
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.Date;
 
 public class Response {
     private Request request;
     private BufferedWriter toClient;
-    // private StringBuilder content = new StringBuilder();
     private String content;
     private StringBuilder headInfo = new StringBuilder();
     private int contentLen = 0; // bytes number;
@@ -28,10 +25,9 @@ public class Response {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        content = Arrays.toString(request.fileData);
     }
 
-    private void createHeadInfo(int statusCode, String location) {
+    private void createHeadInfo(int statusCode) {
         // Status Line
         headInfo.append("HTTP/1.1").append(BLANK);
         headInfo.append(statusCode).append(BLANK); // HTTP Status Code, default 200
@@ -59,29 +55,25 @@ public class Response {
                 break;
         }
         if (statusCode == 301) {
-            headInfo.append("Location: ").append(location);
+            headInfo.append("Location: ").append(request.getURL());
         }
         // Head Line
-        setContent(request.getURL());
+        try {
+            this.content = GetFile.getFile(request.getURL());
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.contentLen = content.getBytes().length;
         headInfo.append("Date:").append(new Date()).append(CRLF);
         headInfo.append("Server:").append("HOST Sever/0.0.0;charset=GBK").append(CRLF);
-        // String ContentType = MIMEList.getMIMEType(location);
-        headInfo.append("Content-type:").append("text/html").append(CRLF);
+        String ContentType = MIMEList.getMIMEType(request.getURL());
+        headInfo.append("Content-type:").append(ContentType).append(CRLF);
         headInfo.append("Content-length:").append(contentLen).append(CRLF);
 
         headInfo.append(CRLF);
 
-        // Return content, blank now, need html file
-
-        headInfo.append(content);
         // Body
         // headInfo.append(content);
-    }
-
-    public Response appendContent(String info) {
-        // content.append(info);
-        contentLen += info.getBytes().length;
-        return this;
     }
 
     /**
@@ -90,11 +82,7 @@ public class Response {
      * @param statusCode
      */
     public void pushToClient(int statusCode) {
-        createHeadInfo(request.statusCode, request.location);
-        // System.out.println(request.statusCode+" " + request.location);
-        // System.out.println(headInfo);
-        // System.out.println(content);
-
+        createHeadInfo(statusCode);
         try {
             toClient.write(headInfo.toString());
             toClient.write(content.toString());
@@ -105,18 +93,6 @@ public class Response {
         }
     }
 
-    private void setContent(String url) {
-        try {
-            BufferedReader reader = new BufferedReader(
-                    new FileReader(System.getProperty("user.dir") + File.separator + "server" + File.separator + url));
-            String tmp;
-            while ((tmp = reader.readLine()) != null) {
-                appendContent(tmp);
-            }
-            reader.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 
 }

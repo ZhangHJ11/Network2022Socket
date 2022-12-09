@@ -16,6 +16,7 @@ public class RegisterAndLogin {
     static private final String REGISTER_SUCCESS_DIR = "/registerSuccess.html";
     static private final String REGISTER_FAIL_DIR = "/registerFail.html";
     public Request request;
+    public static int statusCode;
 
     public RegisterAndLogin() {
         clientMessages = new HashMap<>();
@@ -25,29 +26,27 @@ public class RegisterAndLogin {
         return now;
     }
 
-    public returnValue deal(String type, String name, String password) {
-        returnValue answer = null;
+    public void deal(String type, String name, String password) {
         if ("register".equals(type)) {
             if (!register(name, password)) {
-                String location = HTTPServer.BIND_DIR + REGISTER_FAIL_DIR;
-                answer = new returnValue(200, location, request.getFileData(location));
+                String location = REGISTER_FAIL_DIR;
+                statusCode = 200;
             }
             else {
-                String location = HTTPServer.BIND_DIR + REGISTER_SUCCESS_DIR;
-                answer = new returnValue(200,location,request.getFileData(location));
+                String location =  REGISTER_SUCCESS_DIR;
+                statusCode = 200;
             }
         } else if ("login".equals(type)) {
             boolean registerRet = login(name, password);
             String location;
             if (!registerRet){
-                location = HTTPServer.BIND_DIR + LOGIN_FAIL_DIR;
+                location = LOGIN_FAIL_DIR;
             }
             else {
-                location = HTTPServer.BIND_DIR + LOGIN_SUCCESS_DIR;
+                location = LOGIN_SUCCESS_DIR;
             }
-            answer = new returnValue(200, location,request.getFileData(location));
+            statusCode = 200;
         }
-        return answer;
     }
 
     private boolean register(String username, String password) {

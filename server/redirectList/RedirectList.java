@@ -24,8 +24,8 @@ public class RedirectList {
     public static HashMap<String,String> redirectLists = new HashMap<>();
     public static HashMap<String,Integer> redirectType = new HashMap<>();
     private RedirectList(){
-        redirectLists.put("/301origin.html", "/301dest.html");
-        redirectType.put("/301origin.html", 301);
+        redirectLists.put("Resources/301origin.html", "Resources/301dest.html");
+        redirectType.put("Resources/301origin.html", 301);
         redirectLists.put("/302origin.html", "/302dest.html");
         redirectType.put("/302origin.html", 302);
     }
@@ -34,7 +34,7 @@ public class RedirectList {
         if(!redirectLists.containsKey(originURL)){
             return "";
         }
-        return redirectType.get(originURL) + redirectLists.get(originURL);
+        return /*redirectType.get(originURL) + */redirectLists.get(originURL);
     }
 
     /**

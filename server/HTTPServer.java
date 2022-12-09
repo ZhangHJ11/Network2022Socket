@@ -1,5 +1,7 @@
 package server;
 
+import util.FileTable;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -41,13 +43,17 @@ public class HTTPServer {
             System.out.println("Got a client.");
             // GET message
             Request firstRequest = new Request(client);
+            Handle firstHandle = new Handle(firstRequest);
+            firstHandle.handle();
             Response firstResponse = new Response(client, firstRequest);
-            firstResponse.pushToClient(200);
+            firstResponse.pushToClient(firstHandle.statusCode);
             if (firstRequest.isKeepAlive()) {
                 while (true) {
                     Request Request = new Request(client);
                     Response Response = new Response(client, Request);
-                    Response.pushToClient(200);
+                    Handle handle2 = new Handle(Request);
+                    handle2.handle();
+                    Response.pushToClient(handle2.statusCode);
                     if(!Request.isKeepAlive()){
                         client.close();
                         break;
