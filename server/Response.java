@@ -55,9 +55,8 @@ public class Response {
                 break;
         }
         if (statusCode == 301) {
-            headInfo.append("Location: ").append(request.getURL());
+            headInfo.append("Location: ").append(request.getURL()).append(CRLF);
         }
-        // Head Line
         try {
             this.content = GetFile.getFile(request.getURL());
         }catch (IOException e) {
@@ -83,6 +82,7 @@ public class Response {
      */
     public void pushToClient(int statusCode) {
         createHeadInfo(statusCode);
+        System.out.println(headInfo);
         try {
             toClient.write(headInfo.toString());
             toClient.write(content.toString());

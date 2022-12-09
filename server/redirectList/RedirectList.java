@@ -26,15 +26,15 @@ public class RedirectList {
     private RedirectList(){
         redirectLists.put("Resources/301origin.html", "Resources/301dest.html");
         redirectType.put("Resources/301origin.html", 301);
-        redirectLists.put("/302origin.html", "/302dest.html");
-        redirectType.put("/302origin.html", 302);
+        redirectLists.put("Resources/302origin.html", "Resources/302dest.html");
+        redirectType.put("Resources/302origin.html", 302);
     }
 
     public String search(String originURL){
         if(!redirectLists.containsKey(originURL)){
             return "";
         }
-        return /*redirectType.get(originURL) + */redirectLists.get(originURL);
+        return redirectLists.get(originURL);
     }
 
     /**

@@ -30,7 +30,8 @@ public class Handle {
                 // 301,302
                 statusCode = Integer.parseInt(redirectQuery.substring(10, 13));
                 location = redirectQuery.substring(0);
-            } else {
+            }
+            else {
                 statusCode = 200;
                 location = url;
                 // 304
@@ -45,6 +46,7 @@ public class Handle {
                     getFile.modify(location);
                 }
             }
+            System.out.println(statusCode + " " + location);
             try {
                 fileData = GetFile.getFile(location).getBytes();
             }catch (IOException e){
@@ -52,12 +54,8 @@ public class Handle {
                 statusCode = 404;
                 location = NOT_FOUND_RES;
             }
-            /*if (fileData == null) {
-                statusCode = 404;
-                location = BIND_DIR + NOT_FOUND_RES;
-                fileData = getFileData(location);
-            }*/
-        } else if (method.equals("POST")) {
+        }
+        else if (method.equals("POST")) {
             if (request.getParaValues("type") != null) {
                 RegisterAndLogin.getClientList().deal(request.getParaValues("type")[0],
                         request.getParaValues("name")[0], request.getParaValues("password")[0]);
@@ -65,7 +63,8 @@ public class Handle {
                 return;
             }
             location = url;
-        } else {
+        }
+        else {
             // 405
             statusCode = 405;
             location = METHOD_NOT_ALLOWED_RES;
