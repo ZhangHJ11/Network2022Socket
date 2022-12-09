@@ -28,25 +28,31 @@ public class NewClient {
         do {
             String cmd = bufferedReader.readLine();
 //            System.out.println(cmd);
-            if (Objects.equals("stop", cmd.substring(0, 4))) {
-//                stop ./Resources/index.html
-                switchMode("Get");
-                String url = cmd.substring(5);
-                connection.setKeepAlive(false);
-                requestMethod.sendRequest(url, new RequestBody());
-                System.out.println("connection released!!!");
-            } else if (Objects.equals("Post", cmd)) {
-                String url = cmd.substring(3);
-                switchMode("POST");
-                requestMethod.sendRequest(url, null);
-            } else if (Objects.equals("get", cmd.substring(0, 3))) {
-//                get ./Resources/index.html
-                String url = cmd.substring(4);
-                switchMode("GET");
-                requestMethod.sendRequest(url, null);
-            }else {
+            if(!cmd.contains(" "))
                 System.out.println("This is an invalid input.");
-                System.out.println("please input again");
+            int index = cmd.indexOf(' ');
+            String url = cmd.substring(index+1);
+            switch (cmd.substring(0,index)){
+                case "stop":
+//                  stop ./Resources/index.html
+                    switchMode("Get");
+                    connection.setKeepAlive(false);
+                    requestMethod.sendRequest(url, new RequestBody());
+                    System.out.println("====>>>> MESSAGE LINE <<<<===");
+                    System.out.println("connection released!!!");
+                    continue;
+                case "get":
+//                  get ./Resources/index.html
+                    switchMode("GET");
+                    requestMethod.sendRequest(url, null);
+                    continue;
+                case "post":
+                    switchMode("POST");
+                    requestMethod.sendRequest(url, null);
+                    continue;
+                default:
+                    System.out.println("This is an invalid input.");
+                    System.out.println("please input again");
             }
         } while (connection.isPersistent());
 
