@@ -49,7 +49,7 @@ public class NewClient {
                     requestMethod.sendRequest(url, null);
                     continue;
                 case "post":
-//                  post ./Resources/registerOrLogin url格式不对
+//                  post ./Resources/index.html url格式不对
                     switchMode("POST");
                     requestMethod.sendRequest(url, new RequestBody(infor));
                     continue;
