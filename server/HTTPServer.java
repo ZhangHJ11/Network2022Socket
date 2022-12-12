@@ -46,6 +46,16 @@ public class HTTPServer {
             firstHandle.handle();
             Response firstResponse = new Response(client, firstRequest);
             firstResponse.pushToClient(firstHandle.statusCode);
+
+            /** insert by liu*/
+            if(Handle.isR){
+                Request Request = new Request(client);
+                Response Response = new Response(client, Request);
+                Handle handle2 = new Handle(Request);
+                handle2.handle();
+                Response.pushToClient(handle2.statusCode);
+            }
+
             if (firstRequest.isKeepAlive()) {
                 while (true) {
                     Request Request = new Request(client);

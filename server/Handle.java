@@ -13,6 +13,7 @@ import static server.HTTPServer.*;
 
 public class Handle {
     Request request;
+    public static boolean isR = false;
     private FileTable getFile = new FileTable();
     public String method ;
     public String url;
@@ -36,6 +37,7 @@ public class Handle {
                 statusCode = Integer.parseInt(redirectQuery.substring(10, 13));
                 location = redirectQuery;
                 request.setUrl(location);
+                isR = true;
                 return;
             }
             else {
@@ -54,7 +56,11 @@ public class Handle {
                     getFile.modify(location);
                 }
             }
-            //System.out.println(statusCode + " " + location);
+            System.out.println("this is " + statusCode + " " + location);
+            if(isR){
+                isR = false;
+                return;
+            }
             if(!fileList.contains(location)){
                 statusCode = 404;
                 location = NOT_FOUND_RES;
@@ -82,6 +88,15 @@ public class Handle {
         return fileList.contains(url);
     }
 
+    public boolean judge(String location){
+        for(int i = 0;i < fileList.size();i++){
+            System.out.println(fileList.get(i));
+            if(fileList.get(i).equals(location)){
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * 建立文件表
      */
