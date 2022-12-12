@@ -29,6 +29,7 @@ public class NewClient {
 //            System.out.println(cmd);
             if(!cmd.contains(" ")){
 //                invalid input
+                System.out.println("====>>>> WARNING <<<<===");
                 System.out.println("This is an invalid input.");
                 System.out.println("connection breakdown!!!");
             }
@@ -45,6 +46,8 @@ public class NewClient {
                     continue;
                 case "get":
 //                  get ./Resources/index.html
+//                  get ./Resources/2.png
+                    System.out.println("====>>>> RECEIVING MESSAGE <<<<===");
                     switchMode("GET");
                     requestMethod.sendRequest(url, null);
                     continue;
@@ -69,13 +72,4 @@ public class NewClient {
         }
     }
 
-//    public void Login(String input,boolean isKeepAlive) throws IOException{
-//        byte[] Bytes=input.getBytes();
-//        RequestBody body=new RequestBody(Bytes);
-//        try {
-//            requestMethod.sendRequest("/registerOrLogin",isKeepAlive, body);//调用POST请求发送登录注册的请求
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }
