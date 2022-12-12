@@ -8,6 +8,7 @@ import Client.Requestmessage.RequestLine;
 import util.InputStreamReader;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 public class Get implements RequestMethod {
     Connect connection;
@@ -35,13 +36,20 @@ public class Get implements RequestMethod {
     }
 
     public void conductResponse() throws IOException {
-        String res = InputStreamReader.readAll(connection.getReceiveStream());
-        String headline = res.substring(0, res.indexOf('\n'));
+        String message = InputStreamReader.readAll(connection.getReceiveStream());
+        String headline = message.substring(0, message.indexOf('\n')+1);
+        message=message.substring(message.indexOf('\n')+1);
         String[] head = headline.split(" ");
         switch (head[1]) {
 //            status code
             case "200":
-                System.out.println(res);
+                System.out.println(headline+message);
+                break;
+            case "301":
+                String newLocation=message.substring(0, message.indexOf('\n')+1);
+                newLocation=newLocation.substring(newLocation.indexOf(' ')+1);
+                System.out.println("Redirecting to: "+newLocation);
+                sendRequest("./"+newLocation,null);
                 break;
             case "404":
                 System.out.println("404 Not Found");
