@@ -12,12 +12,16 @@ public class Response {
     private Request request;
     private BufferedWriter toClient;
     private String content;
+    /**test*/
+    private static String OldContent;
     private StringBuilder headInfo = new StringBuilder();
     private int contentLen = 0; // bytes number;
     private final String BLANK = " ";
     private final String CRLF = "\r\n";
     MIMETypes MIMEList = MIMETypes.getMIMELists();
 
+    /**just for test*/
+    private static int OldStatusNode = 0;
     public Response(Socket client, Request request) {
         try {
             this.request = request;
@@ -58,10 +62,16 @@ public class Response {
         if (statusCode == 301) {
             headInfo.append("Location: ").append(request.getURL()).append(CRLF);
         }
-        try {
-            this.content = GetFile.getFile(request.getURL());
-        }catch (IOException e) {
-            e.printStackTrace();
+        /**test*/
+        if(301 != OldStatusNode) {
+            try {
+                this.content = GetFile.getFile(request.getURL());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            this.content = OldContent;
         }
         this.contentLen = content.getBytes().length;
         headInfo.append("Date:").append(new Date()).append(CRLF);
@@ -72,6 +82,9 @@ public class Response {
 
         headInfo.append(CRLF);
 
+        /**test*/
+        OldStatusNode = statusCode;
+        OldContent = content;
         // Body
         // headInfo.append(content);
     }
@@ -83,8 +96,8 @@ public class Response {
      */
     public void pushToClient(int statusCode) {
         createHeadInfo(statusCode);
-        System.out.println(headInfo);
-        System.out.println(content);
+        //System.out.println(headInfo);
+        //System.out.println(content);
         try {
             toClient.write(headInfo.toString());
             toClient.write(content.toString());

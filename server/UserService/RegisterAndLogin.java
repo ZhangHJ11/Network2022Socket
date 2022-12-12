@@ -17,6 +17,7 @@ public class RegisterAndLogin {
     static private final String REGISTER_FAIL_DIR = "/registerFail.html";
     public Request request;
     public static int statusCode;
+    public static String location;
 
     public RegisterAndLogin() {
         clientMessages = new HashMap<>();
@@ -29,16 +30,15 @@ public class RegisterAndLogin {
     public void deal(String type, String name, String password) {
         if ("register".equals(type)) {
             if (!register(name, password)) {
-                String location = REGISTER_FAIL_DIR;
+                location = REGISTER_FAIL_DIR;
                 statusCode = 200;
             }
             else {
-                String location =  REGISTER_SUCCESS_DIR;
+                location =  REGISTER_SUCCESS_DIR;
                 statusCode = 200;
             }
         } else if ("login".equals(type)) {
             boolean registerRet = login(name, password);
-            String location;
             if (!registerRet){
                 location = LOGIN_FAIL_DIR;
             }

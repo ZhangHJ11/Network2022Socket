@@ -7,6 +7,7 @@ import util.GetFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static server.HTTPServer.*;
 
@@ -38,6 +39,7 @@ public class Handle {
                 location = redirectQuery;
                 request.setUrl(location);
                 isR = true;
+                //System.out.println(location);
                 return;
             }
             else {
@@ -46,7 +48,7 @@ public class Handle {
                 // 304
                 // 文件修改时间
                 Long getTime = getFile.getModifiedTime(location);
-                Long modifyTime = 0L/* modifiedFileTable.getModifiedTime(location) */;
+                Long modifyTime = 0L /*modifiedFileTable.getModifiedTime(location)*/;
                 if (getTime >= modifyTime) {
                     statusCode = 304;
                     location = NOT_MODIFIED_RES;
@@ -56,7 +58,7 @@ public class Handle {
                     getFile.modify(location);
                 }
             }
-            System.out.println("this is " + statusCode + " " + location);
+            //System.out.println(location);
             if(isR){
                 isR = false;
                 return;
@@ -68,13 +70,13 @@ public class Handle {
             }
         }
         else if (method.equals("POST")) {
+            System.out.println(Arrays.toString(request.getParaValues("type")));
             if (request.getParaValues("type") != null) {
                 RegisterAndLogin.getClientList().deal(request.getParaValues("type")[0],
                         request.getParaValues("name")[0], request.getParaValues("password")[0]);
                 statusCode = RegisterAndLogin.statusCode;
-                return;
+                location = RegisterAndLogin.location;
             }
-            location = url;
         }
         else {
             // 405
@@ -88,15 +90,6 @@ public class Handle {
         return fileList.contains(url);
     }
 
-    public boolean judge(String location){
-        for(int i = 0;i < fileList.size();i++){
-            System.out.println(fileList.get(i));
-            if(fileList.get(i).equals(location)){
-                return true;
-            }
-        }
-        return false;
-    }
     /**
      * 建立文件表
      */
