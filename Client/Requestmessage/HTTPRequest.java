@@ -19,6 +19,7 @@ public class HTTPRequest {
             request.append(object).append(": ").append(requestHead.getHashMap().get(object)).append(System.lineSeparator());
         }
         request.append(System.lineSeparator());
+        if(requestBody!=null) request.append(requestBody.getBody());
         return request.toString();
     }
 }

@@ -1,5 +1,6 @@
 package Client;
 
+import Client.Loginservice.Login;
 import Client.Requestmessage.RequestBody;
 import Client.methods.Get;
 import Client.methods.Post;
@@ -7,10 +8,6 @@ import Client.methods.RequestMethod;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 public class NewClient {
     private String host;
@@ -22,14 +19,19 @@ public class NewClient {
     public NewClient(int port, String host, boolean isKeepAlive) throws IOException {
         connection = new Connect(host, port, isKeepAlive);
         connection.creat();
-
+//        login message
+        Login login = new Login();
+        String infor = login.set();
 
         BufferedReader bufferedReader = new BufferedReader(new java.io.InputStreamReader(System.in));
         do {
             String cmd = bufferedReader.readLine();
 //            System.out.println(cmd);
-            if(!cmd.contains(" "))
+            if(!cmd.contains(" ")){
+//                invalid input
                 System.out.println("This is an invalid input.");
+                System.out.println("connection breakdown!!!");
+            }
             int index = cmd.indexOf(' ');
             String url = cmd.substring(index+1);
             switch (cmd.substring(0,index)){
@@ -47,8 +49,9 @@ public class NewClient {
                     requestMethod.sendRequest(url, null);
                     continue;
                 case "post":
+//                  post ./Resources/registerOrLogin url格式不对
                     switchMode("POST");
-                    requestMethod.sendRequest(url, null);
+                    requestMethod.sendRequest(url, new RequestBody(infor));
                     continue;
                 default:
                     System.out.println("This is an invalid input.");

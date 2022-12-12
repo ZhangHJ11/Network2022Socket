@@ -18,7 +18,7 @@ public class Post implements RequestMethod {
         this.connection=connection;
     }
 
-    private HTTPRequest assembleRequest(String url,boolean isKeepAlive,RequestBody body){
+    private HTTPRequest assembleRequest(String url,RequestBody body){
         RequestLine requestline = new RequestLine("POST", url);
         RequestHead requestHead = new RequestHead();
 
@@ -30,7 +30,7 @@ public class Post implements RequestMethod {
         } else {
             requestHead.put("Host", connection.getHost()); // 访问默认端口的时候是不需要端口号的
         }
-        requestHead.put("Connection", isKeepAlive?"Keep-Alive":"");
+        requestHead.put("Connection", connection.isPersistent() ? "Keep-Alive" : "");
 
         return new HTTPRequest(requestline, requestHead, body);
     }
@@ -53,13 +53,9 @@ public class Post implements RequestMethod {
 
     public void sendRequest(String url, RequestBody body) throws IOException {
         //实现发送请求
-        try(Socket server = new Socket(connection.getHost(), connection.getPort())) {
-            HTTPRequest request = assembleRequest(url,false,body);
-            server.getOutputStream().write(request.toString().getBytes());
-            conductResponse();
-        }
-        catch (ConnectException e) {
-            e.printStackTrace();
-        }
+        HTTPRequest request=assembleRequest(url,body);
+        connection.getSendStream().write(request.toString().getBytes());
+        conductResponse();
+
     }
 }
