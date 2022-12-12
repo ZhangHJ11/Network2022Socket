@@ -1,20 +1,13 @@
 package Client.methods;
 
 import Client.Connect;
-import Client.Connections;
 import Client.Requestmessage.HTTPRequest;
 import Client.Requestmessage.RequestBody;
 import Client.Requestmessage.RequestHead;
 import Client.Requestmessage.RequestLine;
 import util.InputStreamReader;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.ConnectException;
-import java.net.Socket;
-import java.util.Objects;
 
 public class Get implements RequestMethod {
     Connect connection;
@@ -41,9 +34,8 @@ public class Get implements RequestMethod {
         return new HTTPRequest(requestline, requestHead, null);
     }
 
-    public void conductResponse(InputStream inputStream) throws IOException {
-//        System.out.println(InputStreamReader.readAll(inputStream));
-        String res = InputStreamReader.readAll(inputStream);
+    public void conductResponse() throws IOException {
+        String res = InputStreamReader.readAll(connection.getReceiveStream());
         String headline = res.substring(0, res.indexOf('\n'));
         String[] head = headline.split(" ");
         switch (head[1]) {
@@ -61,7 +53,7 @@ public class Get implements RequestMethod {
 
         HTTPRequest request=assembleRequest(url);
         connection.getSendStream().write(request.toString().getBytes());
-        conductResponse(connection.getReceiveStream());
+        conductResponse();
 
     }
 }
