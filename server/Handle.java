@@ -2,10 +2,14 @@ package server;
 
 import server.UserService.RegisterAndLogin;
 import server.redirectList.RedirectList;
+import util.FileMaker;
 import util.FileTable;
 import util.GetFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -72,13 +76,34 @@ public class Handle {
         else if (method.equals("POST")) {
             System.out.println(Arrays.toString(request.getParaValues("type")));
             if (request.getParaValues("type") != null) {
+                System.out.println("798456541132");
                 RegisterAndLogin.getClientList().deal(request.getParaValues("type")[0],
                         request.getParaValues("name")[0], request.getParaValues("password")[0]);
                 statusCode = RegisterAndLogin.statusCode;
                 location = RegisterAndLogin.location;
             }
             else{
-
+                InputStream data = new ByteArrayInputStream(request.getBody().getBytes(StandardCharsets.UTF_8));
+                String redirectQuery = redirectList.search(url);
+                //重定向
+                if (!redirectQuery.equals("")) {
+                    // 301,302
+                    statusCode = Integer.parseInt(redirectQuery.substring(10, 13));
+                    location = redirectQuery;
+                    request.setUrl(location);
+                    return;
+                }
+                if(!fileList.contains(url)){
+                    statusCode = 200;
+                    location = url;
+                    FileMaker.makeFile(url);
+                    FileMaker.write(url,data);
+                }
+                else{
+                    statusCode = 200;
+                    location = url;
+                    FileMaker.write(url,data);
+                }
             }
         }
         else {
@@ -87,10 +112,6 @@ public class Handle {
             location = METHOD_NOT_ALLOWED_RES;
             request.setUrl(location);
         }
-    }
-
-    public static boolean ifFileIn(String url){
-        return fileList.contains(url);
     }
 
     /**

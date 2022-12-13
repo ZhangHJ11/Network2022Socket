@@ -62,7 +62,7 @@ public class Request {
         // 版本默认 HTTP/1.1 不做处理
         // post 才有实体主体
         if (method.equals("POST")) {
-            queryStr = requestInfo.substring(requestInfo.lastIndexOf(CRLF)).trim();
+            queryStr = getBody();
         }
     }
 
@@ -99,10 +99,14 @@ public class Request {
      */
     public String[] getParaValues(String key) {
         List<String> list = paraMap.get(key);
-        if (list == null || list.size() == 1) {
+        if (list == null) {
             return null;
         }
         return list.toArray(new String[0]);
+    }
+
+    public String getBody(){
+        return requestInfo.substring(requestInfo.lastIndexOf(CRLF)).trim();
     }
 
 }

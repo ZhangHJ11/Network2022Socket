@@ -29,7 +29,7 @@ public class RegisterAndLogin {
 
     public void deal(String type, String name, String password) {
         if ("register".equals(type)) {
-            if (!register(name, password)) {
+            if(!register(name, password)) {
                 location = REGISTER_FAIL_DIR;
                 statusCode = 200;
             }
