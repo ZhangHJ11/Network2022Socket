@@ -47,7 +47,7 @@ public class HTTPServer {
             Response firstResponse = new Response(client, firstRequest);
             firstResponse.pushToClient(firstHandle.statusCode);
 
-            /** insert by liu*/
+            /** insert by liu */
             if(Handle.isR){
                 Request Request = new Request(client);
                 Response Response = new Response(client, Request);

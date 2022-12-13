@@ -18,7 +18,7 @@ public class Login {
         System.out.println("Your password:");
         password = bufferedReader.readLine();
         System.out.println();
-        return "type=login"+"&username="+username+"&password="+password+System.lineSeparator();
+        return "&type=login"+"&username="+username+"&password="+password+System.lineSeparator();
     }
 
 }

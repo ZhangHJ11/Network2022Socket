@@ -77,6 +77,9 @@ public class Handle {
                 statusCode = RegisterAndLogin.statusCode;
                 location = RegisterAndLogin.location;
             }
+            else{
+
+            }
         }
         else {
             // 405
