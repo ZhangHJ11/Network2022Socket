@@ -5,13 +5,11 @@ import Client.Requestmessage.RequestBody;
 import Client.methods.Get;
 import Client.methods.Post;
 import Client.methods.RequestMethod;
+import util.StreamReader;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 public class NewClient {
-    private String host;
-    private int port;
     private final Connect connection;
     RequestMethod requestMethod;
 
@@ -23,19 +21,16 @@ public class NewClient {
         Login login = new Login();
         String infor = login.set();
 
-        BufferedReader bufferedReader = new BufferedReader(new java.io.InputStreamReader(System.in));
         do {
-            String cmd = bufferedReader.readLine();
-//            System.out.println(cmd);
-            if(!cmd.contains(" ")){
+            String cmd = StreamReader.readline();
+            while (!cmd.contains(" ")) {
 //                invalid input
-                System.out.println("====>>>> WARNING <<<<===");
                 System.out.println("This is an invalid input.");
-                System.out.println("connection breakdown!!!");
+                cmd = StreamReader.readline();
             }
             int index = cmd.indexOf(' ');
-            String url = cmd.substring(index+1);
-            switch (cmd.substring(0,index)){
+            String url = cmd.substring(index + 1);
+            switch (cmd.substring(0, index)) {
                 case "stop":
 //                  stop ./Resources/index.html
                     switchMode("Get");
