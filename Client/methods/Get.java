@@ -32,6 +32,7 @@ public class Get implements RequestMethod {
             requestHead.put("Host", connection.getHost()); // 访问默认端口的时候是不需要端口号的
         }
         requestHead.put("Connection", connection.isPersistent() ? "Keep-Alive" : "");
+        requestHead.put("Time", "10000");
 
         return new HTTPRequest(requestline, requestHead, null);
     }

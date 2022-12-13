@@ -13,10 +13,10 @@ public class Post implements RequestMethod {
     private Connect connection;
 
     public Post(Connect connection) {
-        this.connection=connection;
+        this.connection = connection;
     }
 
-    private HTTPRequest assembleRequest(String url,RequestBody body) throws IOException {
+    private HTTPRequest assembleRequest(String url, RequestBody body) {
         RequestLine requestline = new RequestLine("POST", url);
         RequestHead requestHead = new RequestHead();
 
@@ -29,6 +29,7 @@ public class Post implements RequestMethod {
             requestHead.put("Host", connection.getHost()); // 访问默认端口的时候是不需要端口号的
         }
         requestHead.put("Connection", connection.isPersistent() ? "Keep-Alive" : "");
+        requestHead.put("Time", "10000");
 
         return new HTTPRequest(requestline, requestHead, body);
     }
@@ -36,9 +37,9 @@ public class Post implements RequestMethod {
     public void conductResponse() throws IOException {
         //实现 处理响应 的操作  对状态码做出处理
         String message = StreamReader.readAll(connection.getReceiveStream());
-        String headline = message.substring(0,message.indexOf('\n'));
+        String headline = message.substring(0, message.indexOf('\n'));
         String[] head = headline.split(" ");
-        switch (head[1]){
+        switch (head[1]) {
 //            status code
             case "200":
                 System.out.println(message);
@@ -51,7 +52,7 @@ public class Post implements RequestMethod {
 
     public void sendRequest(String url, RequestBody body) throws IOException {
         //实现发送请求
-        HTTPRequest request=assembleRequest(url,body);
+        HTTPRequest request = assembleRequest(url, body);
         connection.getSendStream().write(request.toString().getBytes());
         conductResponse();
 

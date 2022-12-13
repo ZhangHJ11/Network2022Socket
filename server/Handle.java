@@ -15,24 +15,23 @@ import java.util.Arrays;
 
 import static server.HTTPServer.*;
 
-
 public class Handle {
     Request request;
     public static boolean isR = false;
     private FileTable getFile = new FileTable();
-    public String method ;
+    public String method;
     public String url;
     public int statusCode;
     public String location;
     public RedirectList redirectList = RedirectList.getRedirectList();
     public static ArrayList<String> fileList;
-    public Handle(Request request){
+
+    public Handle(Request request) {
         this.request = request;
         this.method = request.getMethod();
         this.url = request.getURL();
         fileList = setFileList();
     }
-
 
     public void handle() {
         if (method.equals("GET")) {
@@ -43,16 +42,15 @@ public class Handle {
                 location = redirectQuery;
                 request.setUrl(location);
                 isR = true;
-                //System.out.println(location);
+                // System.out.println(location);
                 return;
-            }
-            else {
+            } else {
                 statusCode = 200;
                 location = url;
                 // 304
                 // 文件修改时间
                 Long getTime = getFile.getModifiedTime(location);
-                Long modifyTime = 0L /*modifiedFileTable.getModifiedTime(location)*/;
+                Long modifyTime = 0L /* modifiedFileTable.getModifiedTime(location) */;
                 if (getTime >= modifyTime) {
                     statusCode = 304;
                     location = NOT_MODIFIED_RES;
@@ -62,30 +60,26 @@ public class Handle {
                     getFile.modify(location);
                 }
             }
-            //System.out.println(location);
-            if(isR){
+            // System.out.println(location);
+            if (isR) {
                 isR = false;
                 return;
             }
-            if(!fileList.contains(location)){
+            if (!fileList.contains(location)) {
                 statusCode = 404;
                 location = NOT_FOUND_RES;
                 request.setUrl(location);
             }
-        }
-        else if (method.equals("POST")) {
-            System.out.println(Arrays.toString(request.getParaValues("type")));
+        } else if (method.equals("POST")) {
             if (request.getParaValues("type") != null) {
-                System.out.println("798456541132");
                 RegisterAndLogin.getClientList().deal(request.getParaValues("type")[0],
-                        request.getParaValues("name")[0], request.getParaValues("password")[0]);
+                        request.getParaValues("username")[0], request.getParaValues("password")[0]);
                 statusCode = RegisterAndLogin.statusCode;
                 location = RegisterAndLogin.location;
-            }
-            else{
+            } else {
                 InputStream data = new ByteArrayInputStream(request.getBody().getBytes(StandardCharsets.UTF_8));
                 String redirectQuery = redirectList.search(url);
-                //重定向
+                // 重定向
                 if (!redirectQuery.equals("")) {
                     // 301,302
                     statusCode = Integer.parseInt(redirectQuery.substring(10, 13));
@@ -93,20 +87,18 @@ public class Handle {
                     request.setUrl(location);
                     return;
                 }
-                if(!fileList.contains(url)){
+                if (!fileList.contains(url)) {
                     statusCode = 200;
                     location = url;
                     FileMaker.makeFile(url);
-                    FileMaker.write(url,data);
-                }
-                else{
+                    FileMaker.write(url, data);
+                } else {
                     statusCode = 200;
                     location = url;
-                    FileMaker.write(url,data);
+                    FileMaker.write(url, data);
                 }
             }
-        }
-        else {
+        } else {
             // 405
             statusCode = 405;
             location = METHOD_NOT_ALLOWED_RES;
@@ -117,7 +109,7 @@ public class Handle {
     /**
      * 建立文件表
      */
-    private ArrayList<String> setFileList(){
+    private ArrayList<String> setFileList() {
         ArrayList<String> list = new ArrayList<>();
         list.add("Resources/2.png");
         list.add("Resources/3.zip");
