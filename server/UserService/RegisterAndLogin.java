@@ -11,15 +11,14 @@ public class RegisterAndLogin {
     private HashMap<String, String> clientMessages;
     // 单例模式
     private static final RegisterAndLogin now = new RegisterAndLogin();
-    static private final String LOGIN_SUCCESS_DIR = "/loginSuccess.html";
-    static private final String LOGIN_FAIL_DIR = "/loginFail.html";
-    static private final String REGISTER_SUCCESS_DIR = "/registerSuccess.html";
-    static private final String REGISTER_FAIL_DIR = "/registerFail.html";
-    public Request request;
+    static private final String LOGIN_SUCCESS_DIR = "Resources/loginSuccess.html";
+    static private final String LOGIN_FAIL_DIR = "Resources/loginFail.html";
+    static private final String REGISTER_SUCCESS_DIR = "Resources/registerSuccess.html";
+    static private final String REGISTER_FAIL_DIR = "Resources/registerFail.html";
     public static int statusCode;
     public static String location;
 
-    public RegisterAndLogin() {
+    private RegisterAndLogin() {
         clientMessages = new HashMap<>();
     }
 
@@ -28,15 +27,15 @@ public class RegisterAndLogin {
     }
 
     public void deal(String type, String name, String password) {
+        System.out.println(type+" "+name+" " + password);
         if ("register".equals(type)) {
             if(!register(name, password)) {
                 location = REGISTER_FAIL_DIR;
-                statusCode = 200;
             }
             else {
                 location =  REGISTER_SUCCESS_DIR;
-                statusCode = 200;
             }
+            statusCode = 200;
         } else if ("login".equals(type)) {
             boolean registerRet = login(name, password);
             if (!registerRet){
@@ -47,6 +46,7 @@ public class RegisterAndLogin {
             }
             statusCode = 200;
         }
+        System.out.println(location);
     }
 
     private boolean register(String username, String password) {
