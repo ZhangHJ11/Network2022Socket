@@ -29,7 +29,7 @@ public class Request {
         return url;
     }
 
-    public void setUrl(String newUrl){
+    public void setUrl(String newUrl) {
         this.url = newUrl;
     }
 
@@ -67,7 +67,6 @@ public class Request {
     }
 
     private void convertMap() {
-        System.out.println("666" + queryStr);
         String[] queryS = queryStr.split("&");
         for (String query : queryS) {
             String[] keyAndValue = query.split("=");
@@ -76,11 +75,6 @@ public class Request {
                 paraMap.put(keyAndValue[0], new ArrayList<String>());
             }
             paraMap.get(keyAndValue[0]).add(keyAndValue[1]);
-        }
-
-        System.out.println("1、entrySet遍历，在键和值都需要时使用（最常用）");
-        for (Map.Entry<String, List<String>> entry : paraMap.entrySet()) {
-            System.out.println("key = " + entry.getKey() + ", value = " + entry.getValue());
         }
     }
 
@@ -105,7 +99,7 @@ public class Request {
         return list.toArray(new String[0]);
     }
 
-    public String getBody(){
+    public String getBody() {
         return requestInfo.substring(requestInfo.lastIndexOf(CRLF)).trim();
     }
 
