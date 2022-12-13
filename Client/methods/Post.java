@@ -5,11 +5,9 @@ import Client.Requestmessage.HTTPRequest;
 import Client.Requestmessage.RequestBody;
 import Client.Requestmessage.RequestHead;
 import Client.Requestmessage.RequestLine;
-import util.InputStreamReader;
+import util.StreamReader;
 
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.Socket;
 
 public class Post implements RequestMethod {
     private Connect connection;
@@ -18,7 +16,7 @@ public class Post implements RequestMethod {
         this.connection=connection;
     }
 
-    private HTTPRequest assembleRequest(String url,RequestBody body){
+    private HTTPRequest assembleRequest(String url,RequestBody body) throws IOException {
         RequestLine requestline = new RequestLine("POST", url);
         RequestHead requestHead = new RequestHead();
 
@@ -37,13 +35,13 @@ public class Post implements RequestMethod {
 
     public void conductResponse() throws IOException {
         //实现 处理响应 的操作  对状态码做出处理
-        String res = InputStreamReader.readAll(connection.getReceiveStream());
-        String headline = res.substring(0,res.indexOf('\n'));
+        String message = StreamReader.readAll(connection.getReceiveStream());
+        String headline = message.substring(0,message.indexOf('\n'));
         String[] head = headline.split(" ");
         switch (head[1]){
 //            status code
             case "200":
-                System.out.println(res);
+                System.out.println(message);
                 break;
             case "404":
                 System.out.println("404 Not Found");

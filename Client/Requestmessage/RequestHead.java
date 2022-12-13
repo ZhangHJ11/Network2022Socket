@@ -1,6 +1,6 @@
 package Client.Requestmessage;
 
-import util.InputStreamReader;
+import util.StreamReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +22,7 @@ public class RequestHead {
     public RequestHead(InputStream inputStream) throws IOException {
         List<String> headline = new ArrayList<>();
         String tmp;
-        while (!(tmp = InputStreamReader.readline(inputStream)).equals("")) {
+        while (!(tmp = StreamReader.readline(inputStream)).equals("")) {
             headline.add(tmp);
         }
 
