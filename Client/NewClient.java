@@ -20,12 +20,16 @@ public class NewClient {
 //        login message
         Login login = new Login();
         String infor = login.set();
+//        register after login
+        switchMode("POST");
+        requestMethod.sendRequest("./Resources/index.html", new RequestBody(infor));
 
         do {
             String cmd = StreamReader.readline();
-            while (!cmd.contains(" ")) {
+            while ((!cmd.startsWith("get") && !cmd.startsWith("post")) || !cmd.contains(" ")) {
 //                invalid input
-                System.out.println("This is an invalid input.");
+                System.out.println("====>>>> WARNING <<<<===");
+                System.out.println("This is an invalid input." + System.lineSeparator() + "Please input again.");
                 cmd = StreamReader.readline();
             }
             int index = cmd.indexOf(' ');
@@ -52,8 +56,8 @@ public class NewClient {
                     requestMethod.sendRequest(url, new RequestBody(infor));
                     continue;
                 default:
-                    System.out.println("This is an invalid input.");
-                    System.out.println("please input again");
+                    System.out.println("====>>>> WARNING <<<<===");
+                    System.out.println("This is an invalid input." + System.lineSeparator() + "Please input again.");
             }
         } while (connection.isPersistent());
 
