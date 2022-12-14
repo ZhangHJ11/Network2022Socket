@@ -100,8 +100,7 @@ public class Request {
     }
 
     public String getBody() {
-        //System.out.println("请求报文是："+requestInfo);
-        //System.out.println("实体主体："+requestInfo.substring(requestInfo.indexOf(CRLF+CRLF)).trim());
+        /**很抱歉改你这，但是你这这么改我才能收到正确的实体主体，原谅我卑微的windows*/
         return requestInfo.substring(requestInfo.indexOf(CRLF+CRLF)).trim();
     }
 
