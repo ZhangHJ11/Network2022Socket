@@ -39,11 +39,10 @@ public class NewClient {
                 case "stop":
                     switchMode("Get");
                     connection.setKeepAlive(false);
-                    requestMethod.sendRequest("./stop", new RequestBody());
+                    requestMethod.sendRequest("./Resources/index.html", new RequestBody());
                     System.out.println("====>>>> MESSAGE LINE <<<<===");
                     System.out.println("connection released!!!");
-                    continue;
-//                    break;
+                    break;
                 case "get":
 //                  ./Resources/index.html
 //                  ./Resources/2.png
@@ -64,15 +63,16 @@ public class NewClient {
                         System.out.println("This is an invalid input." + System.lineSeparator() + "Please input again.");
                         type = StreamReader.readline();
                     }
-                    if(type.equals("login")){
+                    if (type.equals("login")) {
                         infor = login.change();
                         requestMethod.sendRequest("./Resources/index.html", new RequestBody(infor));
                     } else if (type.equals("upload")) {
 //                        TODO:文件上传
-                        System.out.println("the url of the file you want to upload?");
+                        System.out.println("the url of the file you want to upload?(e.g. uploadSuccess.html)");
                         String fileurl = StreamReader.readline();
-                        requestMethod.sendRequest("./Resources/index.html",
-                                new RequestBody("&type=picture"+GetFile.getFile(fileurl)));
+                        System.out.println("target url?");
+                        url = StreamReader.readline();
+                        requestMethod.sendRequest(url, new RequestBody(GetFile.getFilecli("Resources/" + fileurl)));
                     }
                     continue;
                 default:
