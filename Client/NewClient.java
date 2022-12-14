@@ -5,8 +5,10 @@ import Client.Requestmessage.RequestBody;
 import Client.methods.Get;
 import Client.methods.Post;
 import Client.methods.RequestMethod;
+import util.GetFile;
 import util.StreamReader;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 
 public class NewClient {
@@ -67,7 +69,10 @@ public class NewClient {
                         requestMethod.sendRequest("./Resources/index.html", new RequestBody(infor));
                     } else if (type.equals("upload")) {
 //                        TODO:文件上传
-                        System.out.println("construction!!!");
+                        System.out.println("the url of the file you want to upload?");
+                        String fileurl = StreamReader.readline();
+                        requestMethod.sendRequest("./Resources/index.html",
+                                new RequestBody("&type=picture"+GetFile.getFile(fileurl)));
                     }
                     continue;
                 default:

@@ -22,7 +22,7 @@ public class Login {
 
     public String change() throws IOException{
         String username, password;
-        System.out.println("You are trying to change your account.");
+        System.out.println("You are trying to change your account.Please input again");
         System.out.println();
         System.out.println("Your username:");
         username = StreamReader.readline();
