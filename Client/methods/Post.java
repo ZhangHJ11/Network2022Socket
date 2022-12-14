@@ -33,7 +33,7 @@ public class Post implements RequestMethod {
         return new HTTPRequest(requestline, requestHead, body);
     }
 
-    public void conductResponse() throws IOException {
+    public void conductResponse(String url) throws IOException {
         //实现 处理响应 的操作  对状态码做出处理
         String message = StreamReader.readAll(connection.getReceiveStream());
         String headline = message.substring(0,message.indexOf('\n'));
@@ -53,7 +53,7 @@ public class Post implements RequestMethod {
         //实现发送请求
         HTTPRequest request=assembleRequest(url,body);
         connection.getSendStream().write(request.toString().getBytes());
-        conductResponse();
+        conductResponse(url);
 
     }
 }
