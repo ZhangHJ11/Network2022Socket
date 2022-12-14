@@ -72,8 +72,7 @@ public class NewClient {
                         String fileurl = StreamReader.readline();
                         System.out.println("target url?");
                         url = StreamReader.readline();
-                        requestMethod.sendRequest(url, new RequestBody("&type=picture" +
-                                GetFile.getFilecli("Resources/" + fileurl)));
+                        requestMethod.sendRequest(url, new RequestBody(GetFile.getFilecli("Resources/" + fileurl)));
                     }
                     continue;
                 default:
