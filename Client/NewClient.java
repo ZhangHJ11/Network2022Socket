@@ -5,8 +5,10 @@ import Client.Requestmessage.RequestBody;
 import Client.methods.Get;
 import Client.methods.Post;
 import Client.methods.RequestMethod;
+import util.GetFile;
 import util.StreamReader;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 
 public class NewClient {
@@ -20,40 +22,62 @@ public class NewClient {
 //        login message
         Login login = new Login();
         String infor = login.set();
+//        register after login
+        switchMode("POST");
+        requestMethod.sendRequest("./Resources/index.html", new RequestBody(infor));
 
         do {
+            System.out.println("get, post or stop?");
             String cmd = StreamReader.readline();
-            while (!cmd.contains(" ")) {
+            while ((!cmd.startsWith("get") && !cmd.startsWith("post") && !cmd.startsWith("stop"))) {
 //                invalid input
-                System.out.println("This is an invalid input.");
+                System.out.println("====>>>> WARNING <<<<===");
+                System.out.println("This is an invalid input." + System.lineSeparator() + "Please input again.");
                 cmd = StreamReader.readline();
             }
-            int index = cmd.indexOf(' ');
-            String url = cmd.substring(index + 1);
-            switch (cmd.substring(0, index)) {
+            switch (cmd) {
                 case "stop":
-//                  stop ./Resources/index.html
                     switchMode("Get");
                     connection.setKeepAlive(false);
-                    requestMethod.sendRequest(url, new RequestBody());
+                    requestMethod.sendRequest("./Resources/index.html", new RequestBody());
                     System.out.println("====>>>> MESSAGE LINE <<<<===");
                     System.out.println("connection released!!!");
-                    continue;
+                    break;
                 case "get":
-//                  get ./Resources/index.html
-//                  get ./Resources/2.png
-                    System.out.println("====>>>> RECEIVING MESSAGE <<<<===");
+//                  ./Resources/index.html
+//                  ./Resources/2.png
+//                        TODO:文件下载
                     switchMode("GET");
+                    System.out.println("url?");
+                    String url = StreamReader.readline();
+                    System.out.println("====>>>> RECEIVING MESSAGE <<<<===");
                     requestMethod.sendRequest(url, null);
                     continue;
                 case "post":
-//                  post ./Resources/index.html url格式不对
+//                  post login or upload url
                     switchMode("POST");
-                    requestMethod.sendRequest(url, new RequestBody(infor));
+                    System.out.println("login or upload?");
+                    String type = StreamReader.readline();
+                    while ((!type.startsWith("login") && !type.startsWith("upload"))) {
+                        System.out.println("====>>>> WARNING <<<<===");
+                        System.out.println("This is an invalid input." + System.lineSeparator() + "Please input again.");
+                        type = StreamReader.readline();
+                    }
+                    if (type.equals("login")) {
+                        infor = login.change();
+                        requestMethod.sendRequest("./Resources/index.html", new RequestBody(infor));
+                    } else if (type.equals("upload")) {
+//                        TODO:文件上传
+                        System.out.println("the url of the file you want to upload?(e.g. uploadSuccess.html)");
+                        String fileurl = StreamReader.readline();
+                        System.out.println("target url?");
+                        url = StreamReader.readline();
+                        requestMethod.sendRequest(url, new RequestBody(GetFile.getFilecli("Resources/" + fileurl)));
+                    }
                     continue;
                 default:
-                    System.out.println("This is an invalid input.");
-                    System.out.println("please input again");
+                    System.out.println("====>>>> WARNING <<<<===");
+                    System.out.println("This is an invalid input." + System.lineSeparator() + "Please input again.");
             }
         } while (connection.isPersistent());
 

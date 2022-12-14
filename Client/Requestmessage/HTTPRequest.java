@@ -18,7 +18,7 @@ public class HTTPRequest {
         for(String object:requestHead.getHashMap().keySet()) {
             request.append(object).append(": ").append(requestHead.getHashMap().get(object)).append(System.lineSeparator());
         }
-        request.append(System.lineSeparator());
+        request.append("\r\n");
         if(requestBody!=null) request.append(requestBody.getBody());
         return request.toString();
     }

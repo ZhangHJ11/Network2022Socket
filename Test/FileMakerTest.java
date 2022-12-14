@@ -1,7 +1,7 @@
 package Test;
 
-import org.junit.Before;
-import org.junit.Test;
+//import org.junit.Before;
+//import org.junit.Test;
 import util.FileMaker;
 
 import java.io.*;
@@ -16,23 +16,23 @@ public class FileMakerTest {
     String relativePath="./Test/";
     String picturePath="D:\\Files\\Learning\\2022Fall\\Internet based Computing\\socket\\code\\Network2022Socket\\server\\Resources\\pic.png";
     String fileName=null;
-    @Before
+    //@Before
     public void init() {
     }
 
-    @Test
+    //@Test
     public void test1() {
         fileName="text.txt";
         FileMaker.makeFile(absolutePath+fileName);
     }
 
-    @Test
+    //@Test
     public void test2() {
         fileName="text.txt";
         FileMaker.makeFile(relativePath+fileName);
     }
 
-    @Test
+    //@Test
     public void test3() {
         fileName="text.txt";
         FileMaker.makeFile(absolutePath+fileName);
@@ -41,7 +41,7 @@ public class FileMakerTest {
         FileMaker.write(absolutePath+fileName,inputStream);
     }
 
-    @Test
+    //@Test
     public void test4() {
         fileName="text.txt";
         FileMaker.makeFile(relativePath+fileName);
@@ -50,7 +50,7 @@ public class FileMakerTest {
         FileMaker.write(relativePath+fileName,inputStream);
     }
 
-    @Test
+    //@Test
     public void test5() {
         File file=new File(picturePath);
         try (InputStream inputStream= Files.newInputStream(file.toPath())) {

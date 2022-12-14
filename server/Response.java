@@ -63,7 +63,7 @@ public class Response {
             headInfo.append("Location: ").append(request.getURL()).append(CRLF);
         }
         /**test*/
-        if(301 != OldStatusNode) {
+        if(301 != OldStatusNode && 302 != OldStatusNode) {
             try {
                 this.content = GetFile.getFile(request.getURL());
             } catch (Exception e) {

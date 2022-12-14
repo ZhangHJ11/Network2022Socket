@@ -29,7 +29,7 @@ public class Request {
         return url;
     }
 
-    public void setUrl(String newUrl){
+    public void setUrl(String newUrl) {
         this.url = newUrl;
     }
 
@@ -62,7 +62,7 @@ public class Request {
         // 版本默认 HTTP/1.1 不做处理
         // post 才有实体主体
         if (method.equals("POST")) {
-            queryStr = requestInfo.substring(requestInfo.lastIndexOf(CRLF)).trim();
+            queryStr = getBody();
         }
     }
 
@@ -93,9 +93,26 @@ public class Request {
      */
     public String[] getParaValues(String key) {
         List<String> list = paraMap.get(key);
-        if (list == null || list.size() == 1) {
+        if (list == null) {
             return null;
         }
         return list.toArray(new String[0]);
     }
+
+    public String getBody() {
+        return requestInfo.substring(requestInfo.lastIndexOf(CRLF)).trim();
+    }
+
+    public int getTimeOut() {
+        int index1 = requestInfo.indexOf("Time:") + 6;
+        int index2 = requestInfo.lastIndexOf(CRLF) - 1;
+        return Integer.parseInt(requestInfo.substring(index1, index2));
+    }
+
+    public String getType() {
+        int index1 = requestInfo.indexOf("Content-type:") + 14;
+        int index2 = requestInfo.indexOf("Time:") - 1;
+        return requestInfo.substring(index1, index2);
+    }
+
 }
