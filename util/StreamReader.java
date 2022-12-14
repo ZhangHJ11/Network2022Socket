@@ -6,6 +6,13 @@ public class StreamReader {
     private static final BufferedReader bufferedReader=new BufferedReader(new java.io.InputStreamReader(System.in));
 //    private static byte[] sysIn=new byte[1024];
 
+    public static byte[] getBytes(InputStream inputStream) throws IOException {
+        byte[] t = new byte[1024*1024];
+        int len=inputStream.read(t);
+        byte[] nt=new byte[len];
+        System.arraycopy(t,0,nt,0,len);
+        return nt;
+    }
     public static String readAll(InputStream inputStream) throws IOException {
         byte[] tmp=new byte[1024*1024];
         int len=inputStream.read(tmp);
