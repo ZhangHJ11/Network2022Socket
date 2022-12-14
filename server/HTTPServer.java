@@ -42,7 +42,7 @@ public class HTTPServer {
             // client.setSoTimeout(100000);
             // GET message
             Request firstRequest = new Request(client);
-            client.setSoTimeout(firstRequest.getTimeOut());
+            // client.setSoTimeout(firstRequest.getTimeOut());
             Handle firstHandle = new Handle(firstRequest);
             firstHandle.handle();
             Response firstResponse = new Response(client, firstRequest);
@@ -60,7 +60,7 @@ public class HTTPServer {
             if (firstRequest.isKeepAlive()) {
                 while (true) {
                     Request Request = new Request(client);
-                    client.setSoTimeout(Request.getTimeOut());
+                    // client.setSoTimeout(Request.getTimeOut());
                     Response Response = new Response(client, Request);
                     Handle handle2 = new Handle(Request);
                     handle2.handle();

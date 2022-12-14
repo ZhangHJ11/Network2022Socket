@@ -109,4 +109,9 @@ public class Request {
         return Integer.parseInt(requestInfo.substring(index1, index2));
     }
 
+    public String getType() {
+        int index1 = requestInfo.indexOf("Content-Type:");
+        return requestInfo.substring(index1, index1);
+    }
+
 }
