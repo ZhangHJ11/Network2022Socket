@@ -63,16 +63,17 @@ public class NewClient {
                         System.out.println("This is an invalid input." + System.lineSeparator() + "Please input again.");
                         type = StreamReader.readline();
                     }
-                    if(type.equals("login")){
+                    if (type.equals("login")) {
                         infor = login.change();
                         requestMethod.sendRequest("./Resources/index.html", new RequestBody(infor));
                     } else if (type.equals("upload")) {
 //                        TODO:文件上传
-                        System.out.println("the url of the file you want to upload?");
+                        System.out.println("the url of the file you want to upload?(e.g. uploadSuccess.html)");
                         String fileurl = StreamReader.readline();
                         System.out.println("target url?");
-                        url=StreamReader.readline();
-                        requestMethod.sendRequest(url, new RequestBody("&type=picture"+GetFile.getFile(fileurl)));
+                        url = StreamReader.readline();
+                        requestMethod.sendRequest(url, new RequestBody("&type=picture" +
+                                GetFile.getFilecli("Resources/" + fileurl)));
                     }
                     continue;
                 default:
