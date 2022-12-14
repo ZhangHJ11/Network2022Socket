@@ -110,8 +110,9 @@ public class Request {
     }
 
     public String getType() {
-        int index1 = requestInfo.indexOf("Content-Type:");
-        return requestInfo.substring(index1, index1);
+        int index1 = requestInfo.indexOf("Content-Type:") + 14;
+        int index2 = requestInfo.indexOf("Time:") - 1;
+        return requestInfo.substring(index1, index2);
     }
 
 }

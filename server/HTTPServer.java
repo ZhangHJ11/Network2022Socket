@@ -5,6 +5,7 @@ import util.FileTable;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class HTTPServer {
 
@@ -37,44 +38,42 @@ public class HTTPServer {
 
     // get connect
     public void receive() {
-        try (Socket client = serverSocket.accept();) {
-            System.out.println("Got a client.");
-            // client.setSoTimeout(100000);
-            // GET message
-            Request firstRequest = new Request(client);
-            // client.setSoTimeout(firstRequest.getTimeOut());
-            Handle firstHandle = new Handle(firstRequest);
-            firstHandle.handle();
-            Response firstResponse = new Response(client, firstRequest);
-            firstResponse.pushToClient(firstHandle.statusCode);
+        ServerConnect serverConnect = new ServerConnect();
+        serverConnect.creat(serverSocket);
+        // serverConnect.setSoTimeout(10000);
 
-            /** insert by liu */
-            if (Handle.isR) {
-                Request Request = new Request(client);
-                Response Response = new Response(client, Request);
+        // GET message
+        Request firstRequest = new Request(serverConnect.socket);
+        serverConnect.setSoTimeout(firstRequest.getTimeOut());
+        Handle firstHandle = new Handle(firstRequest);
+        firstHandle.handle();
+        Response firstResponse = new Response(serverConnect.socket, firstRequest);
+        firstResponse.pushToClient(firstHandle.statusCode);
+
+        /** insert by liu */
+        if (Handle.isR) {
+            Request Request = new Request(serverConnect.socket);
+            Response Response = new Response(serverConnect.socket, Request);
+            Handle handle2 = new Handle(Request);
+            handle2.handle();
+            Response.pushToClient(handle2.statusCode);
+        }
+
+        if (firstRequest.isKeepAlive()) {
+            while (true) {
+                Request Request = new Request(serverConnect.socket);
+                serverConnect.setSoTimeout(Request.getTimeOut());
+                Response Response = new Response(serverConnect.socket, Request);
                 Handle handle2 = new Handle(Request);
                 handle2.handle();
                 Response.pushToClient(handle2.statusCode);
-            }
-
-            if (firstRequest.isKeepAlive()) {
-                while (true) {
-                    Request Request = new Request(client);
-                    // client.setSoTimeout(Request.getTimeOut());
-                    Response Response = new Response(client, Request);
-                    Handle handle2 = new Handle(Request);
-                    handle2.handle();
-                    Response.pushToClient(handle2.statusCode);
-                    if (!Request.isKeepAlive()) {
-                        client.close();
-                        break;
-                    }
+                if (!Request.isKeepAlive()) {
+                    serverConnect.close();
+                    break;
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Client error.");
         }
+        serverConnect.close();
     }
 
     // stop sever
