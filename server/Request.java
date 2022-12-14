@@ -100,7 +100,9 @@ public class Request {
     }
 
     public String getBody() {
-        return requestInfo.substring(requestInfo.lastIndexOf(CRLF)).trim();
+        //System.out.println("请求报文是："+requestInfo);
+        //System.out.println("实体主体："+requestInfo.substring(requestInfo.indexOf(CRLF+CRLF)).trim());
+        return requestInfo.substring(requestInfo.indexOf(CRLF+CRLF)).trim();
     }
 
     public int getTimeOut() {

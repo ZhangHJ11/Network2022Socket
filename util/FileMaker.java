@@ -6,11 +6,11 @@ import java.nio.file.Paths;
 
 public class FileMaker {
     public static void makeFile(String filePath) {
-        File file=new File(filePath);
+        File file = new File(filePath);
         try {
-            boolean newFile=file.createNewFile();
+            boolean newFile = file.createNewFile();
             if(newFile) {
-                System.out.println("Created new file \""+filePath+"\".");
+                System.out.println("Created new file \" " +filePath+"\".");
             }
         } catch (IOException e) {
             e.printStackTrace();

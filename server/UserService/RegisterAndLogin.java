@@ -15,6 +15,7 @@ public class RegisterAndLogin {
     static private final String LOGIN_FAIL_DIR = "Resources/loginFail.html";
     static private final String REGISTER_SUCCESS_DIR = "Resources/registerSuccess.html";
     static private final String REGISTER_FAIL_DIR = "Resources/registerFail.html";
+    static private final String RegisterAndLoginSuccess = "Resources/RegisterAndLoginSuccess.html";
     public static int statusCode;
     public static String location;
 
@@ -27,7 +28,7 @@ public class RegisterAndLogin {
     }
 
     public void deal(String type, String name, String password) {
-        System.out.println(type+" "+name+" " + password);
+        //System.out.println(type+" " + name + " " + password);
         if ("register".equals(type)) {
             if(!register(name, password)) {
                 location = REGISTER_FAIL_DIR;
@@ -36,17 +37,21 @@ public class RegisterAndLogin {
                 location =  REGISTER_SUCCESS_DIR;
             }
             statusCode = 200;
-        } else if ("login".equals(type)) {
-            boolean registerRet = login(name, password);
-            if (!registerRet){
+        }
+        else if ("login".equals(type)) {
+            int registerRet = login(name, password);
+            if (registerRet == 2){
                 location = LOGIN_FAIL_DIR;
             }
-            else {
+            else if(registerRet == 1){
                 location = LOGIN_SUCCESS_DIR;
+            }
+            else{
+                location = RegisterAndLoginSuccess;
             }
             statusCode = 200;
         }
-        System.out.println(location);
+        //System.out.println(location);
     }
 
     private boolean register(String username, String password) {
@@ -55,9 +60,18 @@ public class RegisterAndLogin {
         return true;
     }
 
-    private boolean login(String username, String password) {
-        if (!clientMessages.containsKey(username)) return false;
-        return clientMessages.get(username).equals(password);
+    private int login(String username, String password) {
+        //不包含这个username，新建一个
+        if (!clientMessages.containsKey(username)){
+            clientMessages.put(username,password);
+            return 0;
+        }
+        //登录名和密码均正确
+        if(clientMessages.get(username).equals(password)){
+            return 1;
+        }
+        //密码错误
+        return 2;
     }
 
 }

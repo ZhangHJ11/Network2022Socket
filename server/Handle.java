@@ -34,6 +34,7 @@ public class Handle {
     }
 
     public void handle() {
+        //System.out.println("body:  " + request.getBody());
         if (method.equals("GET")) {
             String redirectQuery = redirectList.search(url);
             if (!redirectQuery.equals("")) {
@@ -72,10 +73,12 @@ public class Handle {
             }
         } else if (method.equals("POST")) {
             if (request.getParaValues("type") != null) {
-                RegisterAndLogin.getClientList().deal(request.getParaValues("type")[0],
-                        request.getParaValues("username")[0], request.getParaValues("password")[0]);
+                //System.out.println("正确的");
+                RegisterAndLogin.getClientList().deal(request.getParaValues("type")[0], request.getParaValues("username")[0], request.getParaValues("password")[0]);
                 statusCode = RegisterAndLogin.statusCode;
                 location = RegisterAndLogin.location;
+                request.setUrl(location);
+                //System.out.println(location);
             } else {
                 InputStream data = new ByteArrayInputStream(request.getBody().getBytes(StandardCharsets.UTF_8));
                 String redirectQuery = redirectList.search(url);
@@ -90,12 +93,12 @@ public class Handle {
                 if (!fileList.contains(url)) {
                     statusCode = 200;
                     location = url;
-                    FileMaker.makeFile(url);
-                    FileMaker.write(url, data);
+                    FileMaker.makeFile("./"+url);
+                    FileMaker.write("./"+url, data);
                 } else {
                     statusCode = 200;
                     location = url;
-                    FileMaker.write(url, data);
+                    FileMaker.write("./"+url, data);
                 }
             }
         } else {
