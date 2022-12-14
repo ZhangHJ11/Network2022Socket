@@ -41,6 +41,7 @@ public class NewClient {
                     System.out.println("====>>>> MESSAGE LINE <<<<===");
                     System.out.println("connection released!!!");
                     continue;
+//                    break;
                 case "get":
 //                  ./Resources/index.html
 //                  ./Resources/2.png
@@ -62,6 +63,7 @@ public class NewClient {
                         type = StreamReader.readline();
                     }
                     if(type.equals("login")){
+                        infor = login.change();
                         requestMethod.sendRequest("./Resources/index.html", new RequestBody(infor));
                     } else if (type.equals("upload")) {
 //                        TODO:文件上传
