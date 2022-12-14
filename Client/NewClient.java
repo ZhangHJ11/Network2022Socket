@@ -8,8 +8,9 @@ import Client.methods.RequestMethod;
 import util.GetFile;
 import util.StreamReader;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class NewClient {
     private final Connect connection;
@@ -70,9 +71,11 @@ public class NewClient {
 //                        TODO:文件上传
                         System.out.println("the url of the file you want to upload?(e.g. uploadSuccess.html)");
                         String fileurl = StreamReader.readline();
+                        File file = new File(System.getProperty("user.dir") + File.separator +
+                                "client" + File.separator + "Resources/" + fileurl);
                         System.out.println("target url?");
                         url = StreamReader.readline();
-                        requestMethod.sendRequest(url, new RequestBody(GetFile.getFilecli("Resources/" + fileurl)));
+                        requestMethod.sendRequest(url, new RequestBody(Files.newInputStream(file.toPath())));
                     }
                     continue;
                 default:

@@ -53,9 +53,18 @@ public class Post implements RequestMethod {
     }
 
     public void sendRequest(String url, RequestBody body) throws IOException {
-        //实现发送请求
+//        实现发送请求
         HTTPRequest request = assembleRequest(url, body);
-        connection.getSendStream().write(request.toString().getBytes());
+        byte[] bytes = new byte[request.toString().getBytes().length + request.bodytobyte().length];
+        System.arraycopy(request.toString().getBytes(), 0, bytes, 0,
+                request.toString().getBytes().length);
+//        head
+//        connection.getSendStream().write(request.toString().getBytes());
+//        body
+//        connection.getSendStream().write(request.bodytobyte());
+        System.arraycopy(request.bodytobyte(), 0, bytes, request.toString().getBytes().length,
+                request.bodytobyte().length);
+        connection.getSendStream().write(bytes);
         conductResponse(url);
 
     }

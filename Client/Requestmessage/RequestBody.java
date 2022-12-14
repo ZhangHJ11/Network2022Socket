@@ -1,12 +1,26 @@
 package Client.Requestmessage;
 
-//请求体
+import java.io.InputStream;
+
 public class RequestBody {
-    //Get method do not use this
-    private String body ;
-    public RequestBody(String body) { this.body = body; }
-    public RequestBody() {}
-    public String getBody(){
+
+    private String body;
+    private InputStream inputStreambody;
+
+    public RequestBody(String body) {
+        this.body = body;
+    }
+
+    public RequestBody(InputStream inputStream) {
+        this.inputStreambody = inputStream;
+    }
+
+    public RequestBody() {
+    }
+
+    public String getBody() {
         return this.body;
     }
+
+    public InputStream getInputStreambody(){return this.inputStreambody;}
 }
