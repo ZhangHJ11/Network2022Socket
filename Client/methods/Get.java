@@ -6,6 +6,7 @@ import Client.Requestmessage.HTTPRequest;
 import Client.Requestmessage.RequestBody;
 import Client.Requestmessage.RequestHead;
 import Client.Requestmessage.RequestLine;
+import server.MIMETypes;
 import util.StreamReader;
 
 import java.io.IOException;
@@ -32,6 +33,7 @@ public class Get implements RequestMethod {
             requestHead.put("Host", connection.getHost()); // 访问默认端口的时候是不需要端口号的
         }
         requestHead.put("Connection", connection.isPersistent() ? "Keep-Alive" : "");
+        requestHead.put("Content-type", MIMETypes.getMIMELists().getMIMEType(url));
         requestHead.put("Time", "10000");
 
         return new HTTPRequest(requestline, requestHead, null);

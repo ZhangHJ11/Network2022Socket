@@ -39,11 +39,10 @@ public class NewClient {
                 case "stop":
                     switchMode("Get");
                     connection.setKeepAlive(false);
-                    requestMethod.sendRequest("./stop", new RequestBody());
+                    requestMethod.sendRequest("./Resources/index.html", new RequestBody());
                     System.out.println("====>>>> MESSAGE LINE <<<<===");
                     System.out.println("connection released!!!");
-                    continue;
-//                    break;
+                    break;
                 case "get":
 //                  ./Resources/index.html
 //                  ./Resources/2.png
@@ -71,8 +70,9 @@ public class NewClient {
 //                        TODO:文件上传
                         System.out.println("the url of the file you want to upload?");
                         String fileurl = StreamReader.readline();
-                        requestMethod.sendRequest("./Resources/index.html",
-                                new RequestBody("&type=picture"+GetFile.getFile(fileurl)));
+                        System.out.println("target url?");
+                        url=StreamReader.readline();
+                        requestMethod.sendRequest(url, new RequestBody("&type=picture"+GetFile.getFile(fileurl)));
                     }
                     continue;
                 default:
