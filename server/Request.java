@@ -103,4 +103,10 @@ public class Request {
         return requestInfo.substring(requestInfo.lastIndexOf(CRLF)).trim();
     }
 
+    public int getTimeOut() {
+        int index1 = requestInfo.indexOf("Time:") + 6;
+        int index2 = requestInfo.lastIndexOf(CRLF) - 1;
+        return Integer.parseInt(requestInfo.substring(index1, index2));
+    }
+
 }

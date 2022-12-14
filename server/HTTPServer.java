@@ -38,10 +38,11 @@ public class HTTPServer {
     // get connect
     public void receive() {
         try (Socket client = serverSocket.accept();) {
-            client.setSoTimeout(3000);
             System.out.println("Got a client.");
+            client.setSoTimeout(100000);
             // GET message
             Request firstRequest = new Request(client);
+            // client.setSoTimeout(firstRequest.getTimeOut());
             Handle firstHandle = new Handle(firstRequest);
             firstHandle.handle();
             Response firstResponse = new Response(client, firstRequest);
@@ -59,6 +60,7 @@ public class HTTPServer {
             if (firstRequest.isKeepAlive()) {
                 while (true) {
                     Request Request = new Request(client);
+                    // client.setSoTimeout(Request.getTimeOut());
                     Response Response = new Response(client, Request);
                     Handle handle2 = new Handle(Request);
                     handle2.handle();
@@ -69,7 +71,7 @@ public class HTTPServer {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Client error.");
         }
