@@ -44,7 +44,7 @@ public class HTTPServer {
 
         // GET message
         Request firstRequest = new Request(serverConnect.socket);
-        serverConnect.setSoTimeout(firstRequest.getTimeOut());
+        // serverConnect.setSoTimeout(firstRequest.getTimeOut());
         Handle firstHandle = new Handle(firstRequest);
         firstHandle.handle();
         Response firstResponse = new Response(serverConnect.socket, firstRequest);
@@ -62,7 +62,8 @@ public class HTTPServer {
         if (firstRequest.isKeepAlive()) {
             while (true) {
                 Request Request = new Request(serverConnect.socket);
-                serverConnect.setSoTimeout(Request.getTimeOut());
+                // serverConnect.setSoTimeout(Request.getTimeOut());
+                Request.getType();
                 Response Response = new Response(serverConnect.socket, Request);
                 Handle handle2 = new Handle(Request);
                 handle2.handle();
