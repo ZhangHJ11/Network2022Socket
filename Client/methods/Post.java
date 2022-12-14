@@ -5,6 +5,7 @@ import Client.Requestmessage.HTTPRequest;
 import Client.Requestmessage.RequestBody;
 import Client.Requestmessage.RequestHead;
 import Client.Requestmessage.RequestLine;
+import server.MIMETypes;
 import util.StreamReader;
 
 import java.io.IOException;
@@ -29,12 +30,13 @@ public class Post implements RequestMethod {
             requestHead.put("Host", connection.getHost()); // 访问默认端口的时候是不需要端口号的
         }
         requestHead.put("Connection", connection.isPersistent() ? "Keep-Alive" : "");
+        requestHead.put("Content-type", MIMETypes.getMIMELists().getMIMEType(url));
         requestHead.put("Time", "10000");
 
         return new HTTPRequest(requestline, requestHead, body);
     }
 
-    public void conductResponse() throws IOException {
+    public void conductResponse(String url) throws IOException {
         //实现 处理响应 的操作  对状态码做出处理
         String message = StreamReader.readAll(connection.getReceiveStream());
         String headline = message.substring(0, message.indexOf('\n'));
@@ -54,7 +56,7 @@ public class Post implements RequestMethod {
         //实现发送请求
         HTTPRequest request = assembleRequest(url, body);
         connection.getSendStream().write(request.toString().getBytes());
-        conductResponse();
+        conductResponse(url);
 
     }
 }

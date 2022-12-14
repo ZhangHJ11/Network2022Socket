@@ -19,4 +19,17 @@ public class GetFile {
             reader.close();
             return ret.toString();
     }
+
+    public static String getFilecli(String url) throws IOException {
+        //System.out.println(System.getProperty("user.dir") + File.separator + "server" + File.separator + url);
+        BufferedReader reader = new BufferedReader(
+                new FileReader(System.getProperty("user.dir") + File.separator + "Client" + File.separator + url));
+        String tmp;
+        StringBuilder ret = new StringBuilder();
+        while ((tmp = reader.readLine()) != null) {
+            ret.append(tmp);
+        }
+        reader.close();
+        return ret.toString();
+    }
 }
