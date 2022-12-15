@@ -96,7 +96,7 @@ public class Response {
      */
     public void pushToClient(int statusCode) {
         createHeadInfo(statusCode);
-        //System.out.println(headInfo);
+        System.out.println(headInfo);
         //System.out.println(content);
         try {
             toClient.write(headInfo.toString());

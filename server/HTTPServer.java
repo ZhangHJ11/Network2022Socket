@@ -19,12 +19,14 @@ public class HTTPServer {
     private ServerSocket serverSocket; // get connect with chrome
     public static FileTable modifiedFileTable; // 记录文件修改时间，用于304
 
-    /*
-     * public HTTPServer(){
-     * HTTPServer.modifiedFileTable = new FileTable();
-     * HTTPServer.modifiedFileTable.initInAFolder(BIND_DIR);
-     * }
+    /**
+     * 初始化文件时间，用于304
      */
+     public HTTPServer(){
+          HTTPServer.modifiedFileTable = new FileTable();
+          HTTPServer.modifiedFileTable.initInAFolder("./server/Resources");
+      }
+
     // start sever
     public void start() {
         try {

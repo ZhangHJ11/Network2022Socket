@@ -51,7 +51,7 @@ public class Handle {
                 // 304
                 // 文件修改时间
                 Long getTime = getFile.getModifiedTime(location);
-                Long modifyTime = 0L /* modifiedFileTable.getModifiedTime(location) */;
+                Long modifyTime = modifiedFileTable.getModifiedTime(location);
                 if (getTime >= modifyTime) {
                     statusCode = 304;
                     location = NOT_MODIFIED_RES;
@@ -93,12 +93,12 @@ public class Handle {
                 if (!fileList.contains(url)) {
                     statusCode = 200;
                     location = url;
-                    FileMaker.makeFile("./"+url);
-                    FileMaker.write("./"+url, data);
+                    FileMaker.makeFile("./server/"+url);
+                    FileMaker.write("./server/"+url, data);
                 } else {
                     statusCode = 200;
                     location = url;
-                    FileMaker.write("./"+url, data);
+                    FileMaker.write("./server"+url, data);
                 }
             }
         } else {
