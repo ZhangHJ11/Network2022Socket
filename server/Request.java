@@ -13,6 +13,7 @@ public class Request {
     private InputStream fromClient;
 
     private byte[] data = new byte[1024 * 1024]; // 1MB
+    private byte[] body = new byte[1024 * 1024];
     private int GETlen;
     private String requestInfo;
     public String method;
@@ -37,17 +38,16 @@ public class Request {
         try {
             fromClient = client.getInputStream();
             GETlen = fromClient.read(data);
-            requestInfo = new String(data, 0, GETlen);
+            requestInfo = new String(data, 0, GETlen > 1000 ? 1000 : GETlen);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("GET error.");
             return;
         }
+        int index = requestInfo.indexOf(CRLF+CRLF) + 4;
+        System.arraycopy(data, index, body, 0, GETlen - index);
         parseGETInfo();
-        if (method.equals("POST")) {
-            paraMap = new HashMap<String, List<String>>();
-            convertMap();
-        }
+
     }
 
     /**
@@ -60,10 +60,12 @@ public class Request {
         int tmp2 = requestInfo.indexOf("HTTP/") - 1;
         url = requestInfo.substring(tmp1, tmp2);
         // 版本默认 HTTP/1.1 不做处理
-        // post 才有实体主体
-        if (method.equals("POST")) {
-            queryStr = getBody();
-        }
+        // 专门处理登陆post
+        //if (body[0] == '&' && body[1] == 't') {
+        queryStr = getLogin();
+        paraMap = new HashMap<String, List<String>>();
+        convertMap();
+        //}
     }
 
     private void convertMap() {
@@ -87,7 +89,7 @@ public class Request {
 
     /**
      * 通过首部字段号查询之后的值
-     * 
+     *
      * @param key
      * @return
      */
@@ -99,9 +101,14 @@ public class Request {
         return list.toArray(new String[0]);
     }
 
-    public String getBody() {
-        /**很抱歉改你这，但是你这这么改我才能收到正确的实体主体，原谅我卑微的windows*/
-        return requestInfo.substring(requestInfo.indexOf(CRLF+CRLF)).trim();
+    public String getLogin() {
+        /** 很抱歉改你这，但是你这这么改我才能收到正确的实体主体，原谅我卑微的windows */
+        int len = requestInfo.indexOf(CRLF+CRLF);
+        int len2 = Math.min(300,GETlen);
+        //System.out.println(len);
+        //System.out.println(len2);
+        //System.out.println(requestInfo.length());
+        return requestInfo.substring(len, len2).trim();
     }
 
     public int getTimeOut() {
@@ -114,6 +121,10 @@ public class Request {
         int index1 = requestInfo.indexOf("Content-type:") + 14;
         int index2 = requestInfo.indexOf("Time:") - 1;
         return requestInfo.substring(index1, index2);
+    }
+
+    public byte[] getBody() {
+        return body;
     }
 
 }
