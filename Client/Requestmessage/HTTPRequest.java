@@ -1,7 +1,5 @@
 package Client.Requestmessage;
 
-import util.StreamReader;
-
 import java.io.IOException;
 
 public class HTTPRequest {
@@ -28,9 +26,6 @@ public class HTTPRequest {
     }
 
     public byte[] bodytobyte() throws IOException {
-        if(requestBody.getBody()!=null)
-            return requestBody.getBody().getBytes();
-        else
-            return StreamReader.getBytes(requestBody.getInputStreambody());
+        return requestBody.getBytes();
     }
 }

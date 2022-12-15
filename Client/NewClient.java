@@ -38,7 +38,7 @@ public class NewClient {
             }
             switch (cmd) {
                 case "stop":
-                    switchMode("Get");
+                    switchMode("GET");
                     connection.setKeepAlive(false);
                     requestMethod.sendRequest("./Resources/index.html", new RequestBody());
                     System.out.println("====>>>> MESSAGE LINE <<<<===");

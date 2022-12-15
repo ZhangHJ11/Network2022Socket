@@ -1,26 +1,29 @@
 package Client.Requestmessage;
 
+import util.StreamReader;
+
+import java.io.IOException;
 import java.io.InputStream;
 
 public class RequestBody {
+    private byte[] bytes;
 
-    private String body;
-    private InputStream inputStreambody;
-
-    public RequestBody(String body) {
-        this.body = body;
+    public RequestBody(String str) {
+        this.bytes = str.getBytes();
     }
 
-    public RequestBody(InputStream inputStream) {
-        this.inputStreambody = inputStream;
+    public RequestBody(InputStream inputStream) throws IOException {
+        this.bytes = StreamReader.getBytes(inputStream);
     }
 
     public RequestBody() {
     }
 
-    public String getBody() {
-        return this.body;
+    public byte[] getBytes() {
+        return bytes;
     }
 
-    public InputStream getInputStreambody(){return this.inputStreambody;}
+    public int getlength(){
+        return bytes.length;
+    }
 }
