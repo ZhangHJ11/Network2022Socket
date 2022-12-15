@@ -12,14 +12,5 @@ public class ClientMain {
         String host = "127.0.0.1";
         NewClient client = new NewClient(port,host,true);
 
-        /*
-        Gettest gettest = new Gettest();
-        gettest.NonPersistentGet(port, host);
-        NewClient client=new NewClient(port,host,"POST");
-        //进行注册
-        Login login=new Login();
-        String input=login.login();//进行注册
-        client.Login(input,true);
-*/
     }
 }

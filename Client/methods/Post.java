@@ -53,19 +53,15 @@ public class Post implements RequestMethod {
     }
 
     public void sendRequest(String url, RequestBody body) throws IOException {
-//        实现发送请求
         HTTPRequest request = assembleRequest(url, body);
         byte[] bytes = new byte[request.toString().getBytes().length + request.requestBody.getlength()];
+//        head
         System.arraycopy(request.toString().getBytes(), 0, bytes, 0,
                 request.toString().getBytes().length);
-//        head
-//        connection.getSendStream().write(request.toString(). getBytes());
 //        body
-//        connection.getSendStream().write(request.bodytobyte());
-//        byte[] bytes1 = new byte[request.bodytobyte().length];
-//        System.arraycopy(request.bodytobyte(),0,bytes1,0,request.bodytobyte().length);
         System.arraycopy(request.bodytobyte(), 0, bytes, request.toString().getBytes().length,
                 request.bodytobyte().length);
+//        send
         connection.getSendStream().write(bytes);
         conductResponse(url);
 
