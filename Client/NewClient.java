@@ -73,7 +73,7 @@ public class NewClient {
                         String fileurl = StreamReader.readline();
                         File file = new File(System.getProperty("user.dir") + File.separator +
                                 "Client" + File.separator + "Resources/" + fileurl);
-                        System.out.println("target url?");
+                        System.out.println("target url?(e.g. ./Resources/uploadSuccess.html)");
                         url = StreamReader.readline();
                         requestMethod.sendRequest(url, new RequestBody(Files.newInputStream(file.toPath())));
                     }

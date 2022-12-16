@@ -61,7 +61,8 @@ public class Request {
         // 版本默认 HTTP/1.1 不做处理
         // 专门处理登陆post
         if (method.equals("POST")) {
-            queryStr = requestInfo.substring(requestInfo.indexOf(CRLF)).trim();
+//            linux 一个CRLF
+            queryStr = requestInfo.substring(requestInfo.indexOf(CRLF+CRLF)).trim();
             paraMap = new HashMap<String, List<String>>();
             convertMap();
         }
