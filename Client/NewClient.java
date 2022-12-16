@@ -16,14 +16,13 @@ public class NewClient {
     private final Connect connection;
     RequestMethod requestMethod;
 
-
     public NewClient(int port, String host, boolean isKeepAlive) throws IOException {
         connection = new Connect(host, port, isKeepAlive);
         connection.creat();
-//        login message
+        // login message
         Login login = new Login();
         String infor = login.set();
-//        register after login
+        // register after login
         switchMode("POST");
         requestMethod.sendRequest("./Resources/index.html", new RequestBody(infor));
 
@@ -31,7 +30,7 @@ public class NewClient {
             System.out.println("get, post or stop?");
             String cmd = StreamReader.readline();
             while ((!cmd.startsWith("get") && !cmd.startsWith("post") && !cmd.startsWith("stop"))) {
-//                invalid input
+                // invalid input
                 System.out.println("====>>>> WARNING <<<<===");
                 System.out.println("This is an invalid input." + System.lineSeparator() + "Please input again.");
                 cmd = StreamReader.readline();
@@ -45,9 +44,9 @@ public class NewClient {
                     System.out.println("connection released!!!");
                     break;
                 case "get":
-//                  ./Resources/index.html
-//                  ./Resources/2.png
-//                        TODO:文件下载
+                    // ./Resources/index.html
+                    // ./Resources/2.png
+                    // TODO:文件下载
                     switchMode("GET");
                     System.out.println("url?");
                     String url = StreamReader.readline();
@@ -55,24 +54,25 @@ public class NewClient {
                     requestMethod.sendRequest(url, null);
                     continue;
                 case "post":
-//                  post login or upload url
+                    // post login or upload url
                     switchMode("POST");
                     System.out.println("login or upload?");
                     String type = StreamReader.readline();
                     while ((!type.startsWith("login") && !type.startsWith("upload"))) {
                         System.out.println("====>>>> WARNING <<<<===");
-                        System.out.println("This is an invalid input." + System.lineSeparator() + "Please input again.");
+                        System.out
+                                .println("This is an invalid input." + System.lineSeparator() + "Please input again.");
                         type = StreamReader.readline();
                     }
                     if (type.equals("login")) {
                         infor = login.change();
                         requestMethod.sendRequest("./Resources/index.html", new RequestBody(infor));
                     } else if (type.equals("upload")) {
-//                        TODO:文件上传
+                        // TODO:文件上传
                         System.out.println("the url of the file you want to upload?(e.g. uploadSuccess.html)");
                         String fileurl = StreamReader.readline();
                         File file = new File(System.getProperty("user.dir") + File.separator +
-                                "client" + File.separator + "Resources/" + fileurl);
+                                "Client" + File.separator + "Resources/" + fileurl);
                         System.out.println("target url?");
                         url = StreamReader.readline();
                         requestMethod.sendRequest(url, new RequestBody(Files.newInputStream(file.toPath())));

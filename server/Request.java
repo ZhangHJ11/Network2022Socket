@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import util.StreamReader;
+
 public class Request {
     private InputStream fromClient;
 
@@ -36,18 +38,15 @@ public class Request {
     public Request(Socket client) {
         try {
             fromClient = client.getInputStream();
-            GETlen = fromClient.read(data);
-            requestInfo = new String(data, 0, GETlen);
+            data = StreamReader.getBytes(fromClient);
+            GETlen = data.length;
+            requestInfo = new String(data, 0, GETlen > 1000 ? 1000 : GETlen);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("GET error.");
             return;
         }
         parseGETInfo();
-        if (method.equals("POST")) {
-            paraMap = new HashMap<String, List<String>>();
-            convertMap();
-        }
     }
 
     /**
@@ -60,9 +59,11 @@ public class Request {
         int tmp2 = requestInfo.indexOf("HTTP/") - 1;
         url = requestInfo.substring(tmp1, tmp2);
         // 版本默认 HTTP/1.1 不做处理
-        // post 才有实体主体
+        // 专门处理登陆post
         if (method.equals("POST")) {
-            queryStr = getBody();
+            queryStr = requestInfo.substring(requestInfo.indexOf(CRLF)).trim();
+            paraMap = new HashMap<String, List<String>>();
+            convertMap();
         }
     }
 
@@ -87,7 +88,7 @@ public class Request {
 
     /**
      * 通过首部字段号查询之后的值
-     * 
+     *
      * @param key
      * @return
      */
@@ -97,11 +98,6 @@ public class Request {
             return null;
         }
         return list.toArray(new String[0]);
-    }
-
-    public String getBody() {
-        /**很抱歉改你这，但是你这这么改我才能收到正确的实体主体，原谅我卑微的windows*/
-        return requestInfo.substring(requestInfo.indexOf(CRLF+CRLF)).trim();
     }
 
     public int getTimeOut() {
@@ -114,6 +110,10 @@ public class Request {
         int index1 = requestInfo.indexOf("Content-type:") + 14;
         int index2 = requestInfo.indexOf("Time:") - 1;
         return requestInfo.substring(index1, index2);
+    }
+
+    public byte[] getBody() {
+        return queryStr.getBytes();
     }
 
 }

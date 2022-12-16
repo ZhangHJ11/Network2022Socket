@@ -34,7 +34,7 @@ public class Handle {
     }
 
     public void handle() {
-        //System.out.println("body:  " + request.getBody());
+        // System.out.println("body: " + request.getBody());
         if (method.equals("GET")) {
             String redirectQuery = redirectList.search(url);
             if (!redirectQuery.equals("")) {
@@ -73,14 +73,15 @@ public class Handle {
             }
         } else if (method.equals("POST")) {
             if (request.getParaValues("type") != null) {
-                //System.out.println("正确的");
-                RegisterAndLogin.getClientList().deal(request.getParaValues("type")[0], request.getParaValues("username")[0], request.getParaValues("password")[0]);
+                // System.out.println("正确的");
+                RegisterAndLogin.getClientList().deal(request.getParaValues("type")[0],
+                        request.getParaValues("username")[0], request.getParaValues("password")[0]);
                 statusCode = RegisterAndLogin.statusCode;
                 location = RegisterAndLogin.location;
                 request.setUrl(location);
-                //System.out.println(location);
+                // System.out.println(location);
             } else {
-                InputStream data = new ByteArrayInputStream(request.getBody().getBytes(StandardCharsets.UTF_8));
+                InputStream data = new ByteArrayInputStream(request.getBody());
                 String redirectQuery = redirectList.search(url);
                 // 重定向
                 if (!redirectQuery.equals("")) {
@@ -93,12 +94,12 @@ public class Handle {
                 if (!fileList.contains(url)) {
                     statusCode = 200;
                     location = url;
-                    FileMaker.makeFile("./server/"+url);
-                    FileMaker.write("./server/"+url, data);
+                    FileMaker.makeFile("./server/" + url);
+                    FileMaker.write("./server/" + url, data);
                 } else {
                     statusCode = 200;
                     location = url;
-                    FileMaker.write("./server"+url, data);
+                    FileMaker.write("./server/" + url, data);
                 }
             }
         } else {
