@@ -59,7 +59,7 @@ public class Response {
                 break;
             default: break;
         }
-        if (statusCode == 301) {
+        if (statusCode == 301 || statusCode == 302) {
             headInfo.append("Location: ").append(request.getURL()).append(CRLF);
         }
         /**test*/

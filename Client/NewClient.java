@@ -40,7 +40,7 @@ public class NewClient {
                     switchMode("GET");
                     connection.setKeepAlive(false);
                     requestMethod.sendRequest("./Resources/index.html", new RequestBody());
-                    System.out.println("====>>>> MESSAGE LINE <<<<===");
+                    System.out.println("====>>>> MESSAGE LINE <<<<====");
                     System.out.println("connection released!!!");
                     break;
                 case "get":
@@ -50,7 +50,7 @@ public class NewClient {
                     switchMode("GET");
                     System.out.println("url?");
                     String url = StreamReader.readline();
-                    System.out.println("====>>>> RECEIVING MESSAGE <<<<===");
+                    System.out.println("====>>>> RECEIVING MESSAGE <<<<====");
                     requestMethod.sendRequest(url, null);
                     continue;
                 case "post":
@@ -59,7 +59,7 @@ public class NewClient {
                     System.out.println("login or upload?");
                     String type = StreamReader.readline();
                     while ((!type.startsWith("login") && !type.startsWith("upload"))) {
-                        System.out.println("====>>>> WARNING <<<<===");
+                        System.out.println("====>>>> WARNING <<<<====");
                         System.out
                                 .println("This is an invalid input." + System.lineSeparator() + "Please input again.");
                         type = StreamReader.readline();
@@ -79,7 +79,7 @@ public class NewClient {
                     }
                     continue;
                 default:
-                    System.out.println("====>>>> WARNING <<<<===");
+                    System.out.println("====>>>> WARNING <<<<====");
                     System.out.println("This is an invalid input." + System.lineSeparator() + "Please input again.");
             }
         } while (connection.isPersistent());
