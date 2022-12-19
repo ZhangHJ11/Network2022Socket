@@ -7,18 +7,15 @@ import util.FileTable;
 import util.GetFile;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static server.HTTPServer.*;
 
 public class Handle {
     Request request;
     public static boolean isR = false;
-    private FileTable getFile = new FileTable();
+    private static  FileTable getFile = new FileTable();
     public String method;
     public String url;
     public int statusCode;
@@ -43,7 +40,6 @@ public class Handle {
                 location = redirectQuery;
                 request.setUrl(location);
                 isR = true;
-                // System.out.println(location);
                 return;
             } else {
                 statusCode = 200;
@@ -52,7 +48,8 @@ public class Handle {
                 // 文件修改时间
                 Long getTime = getFile.getModifiedTime(location);
                 Long modifyTime = modifiedFileTable.getModifiedTime(location);
-                if (getTime >= modifyTime) {
+                //System.out.println(getTime + " " + modifyTime);
+                if (getTime > modifyTime) {
                     statusCode = 304;
                     location = NOT_MODIFIED_RES;
                     request.setUrl(location);
@@ -60,8 +57,10 @@ public class Handle {
                     // 修改文件
                     getFile.modify(location);
                 }
+                getTime = getFile.getModifiedTime(location);
+                modifyTime = modifiedFileTable.getModifiedTime(location);
+                //System.out.println(getTime + " " + modifyTime);
             }
-            // System.out.println(location);
             if (isR) {
                 isR = false;
                 return;
@@ -96,10 +95,13 @@ public class Handle {
                     location = url;
                     FileMaker.makeFile("./server/" + url);
                     FileMaker.write("./server/" + url, data);
+                    fileList.add(location);
+                    modifiedFileTable.modify(location);
                 } else {
                     statusCode = 200;
                     location = url;
                     FileMaker.write("./server/" + url, data);
+                    modifiedFileTable.modify(location);
                 }
             }
         } else {

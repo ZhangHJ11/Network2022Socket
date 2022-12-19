@@ -30,11 +30,19 @@ public class FileTable {
                 File file1 = tmpList[i];
                 String filePath = file1.toString();
                 filePath = filePath.replace((char)92,'/');
+                filePath = filePath.substring(9);
+                //System.out.println(filePath);
                 files.put(filePath, System.currentTimeMillis());
             }
         }
         lock.unlock();
     }
+    /*public void initInAFolder(String location) {
+        lock.lock();
+        location = location.replace((char)92,'/');
+        files.put(location, System.currentTimeMillis());
+        lock.unlock();
+    }*/
 
     /**
      * 修改一个文件
@@ -42,9 +50,12 @@ public class FileTable {
      */
     public void modify(String file) {
         lock.lock();
+        //System.out.println(file);
         if (files.get(file) == null) {
+            //System.out.println("null");
             files.put(file, System.currentTimeMillis());
         } else {
+            //System.out.println("yes");
             files.replace(file, System.currentTimeMillis());
         }
         lock.unlock();
@@ -58,6 +69,7 @@ public class FileTable {
     public Long getModifiedTime(String file) {
         Long ret = -1L;
         lock.lock();
+        //file = "./server/" + file;
         if (files.get(file) != null) ret = files.get(file);
         lock.unlock();
         return ret;

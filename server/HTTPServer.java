@@ -22,7 +22,7 @@ public class HTTPServer {
     /**
      * 初始化文件时间，用于304
      */
-     public HTTPServer(){
+    public HTTPServer(){
           HTTPServer.modifiedFileTable = new FileTable();
           HTTPServer.modifiedFileTable.initInAFolder("./server/Resources");
       }
