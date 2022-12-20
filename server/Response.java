@@ -2,17 +2,16 @@ package server;
 
 import util.GetFile;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Date;
 
 public class Response {
     private Request request;
-    private BufferedWriter toClient;
+    private OutputStream toClient;
     private String content;
-    /**test*/
+    /** test */
     private static String OldContent;
     private StringBuilder headInfo = new StringBuilder();
     private int contentLen = 0; // bytes number;
@@ -20,12 +19,13 @@ public class Response {
     private final String CRLF = "\r\n";
     MIMETypes MIMEList = MIMETypes.getMIMELists();
 
-    /**just for test*/
+    /** just for test */
     private static int OldStatusNode = 0;
+
     public Response(Socket client, Request request) {
         try {
             this.request = request;
-            toClient = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+            toClient = client.getOutputStream();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,20 +57,20 @@ public class Response {
             case 500: // 服务端错误
                 headInfo.append("Internal Server Error").append(CRLF);
                 break;
-            default: break;
+            default:
+                break;
         }
         if (statusCode == 301 || statusCode == 302) {
             headInfo.append("Location: ").append(request.getURL()).append(CRLF);
         }
-        /**test*/
-        if(301 != OldStatusNode && 302 != OldStatusNode) {
+        /** test */
+        if (301 != OldStatusNode && 302 != OldStatusNode) {
             try {
                 this.content = GetFile.getFile(request.getURL());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else{
+        } else {
             this.content = OldContent;
         }
         this.contentLen = content.getBytes().length;
@@ -82,7 +82,7 @@ public class Response {
 
         headInfo.append(CRLF);
 
-        /**test*/
+        /** test */
         OldStatusNode = statusCode;
         OldContent = content;
         // Body
@@ -91,16 +91,15 @@ public class Response {
 
     /**
      * 返回客户端
-     * 
+     *
      * @param statusCode
      */
     public void pushToClient(int statusCode) {
         createHeadInfo(statusCode);
         System.out.println(headInfo);
-        //System.out.println(content);
+        // System.out.println(content);
         try {
-            toClient.write(headInfo.toString());
-            toClient.write(content.toString());
+            toClient.write((headInfo.toString() + content).getBytes());
             toClient.flush();
         } catch (IOException e) {
             e.printStackTrace();

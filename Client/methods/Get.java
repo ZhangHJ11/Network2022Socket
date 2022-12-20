@@ -43,6 +43,7 @@ public class Get implements RequestMethod {
 
     public void conductResponse(String url) throws IOException {
         String message = StreamReader.readAll(connection.getReceiveStream());
+        System.out.println("fuck");
         String headline = message.substring(0, message.indexOf('\n')+1);
         message=message.substring(message.indexOf('\n')+1);
         String[] head = headline.split(" ");

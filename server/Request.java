@@ -55,7 +55,9 @@ public class Request {
     private void parseGETInfo() {
         System.out.println(requestInfo);
         method = requestInfo.substring(0, requestInfo.indexOf(" "));
-        int tmp1 = requestInfo.indexOf("/") + 1;
+        /**test*/
+        //int tmp1 = requestInfo.indexOf("/") + 1;
+        int tmp1 = requestInfo.indexOf(" ") + 3;
         int tmp2 = requestInfo.indexOf("HTTP/") - 1;
         url = requestInfo.substring(tmp1, tmp2);
         // 版本默认 HTTP/1.1 不做处理
