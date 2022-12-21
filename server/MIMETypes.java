@@ -32,7 +32,7 @@ public class MIMETypes {
         MIMEList.put(".ico", "image/vnd.microsoft.icon");
         MIMEList.put(".bmp", "image/bmp");
         // 文本部分
-        //MIMEList.put(".xml", "text/xml");
+        // MIMEList.put(".xml", "text/xml");
         MIMEList.put(".htm", "text/html");
         MIMEList.put(".html", "text/html");
         MIMEList.put(".css", "text/css");
@@ -107,7 +107,7 @@ public class MIMETypes {
     }
 
     /**
-     * 根据传入URI返回对应的MIME类型，找不到默认按照 application/octet-stream 处理
+     * 根据传入URL返回对应的MIME类型，找不到默认按照 application/octet-stream 处理
      * 
      * @param oUri 传入的URI
      * @return MIME类型字符??

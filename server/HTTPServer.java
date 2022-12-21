@@ -19,10 +19,10 @@ public class HTTPServer {
     /**
      * 初始化文件时间，用于304
      */
-    public HTTPServer(){
-          HTTPServer.modifiedFileTable = new FileTable();
-          HTTPServer.modifiedFileTable.initInAFolder("./server/Resources");
-      }
+    public HTTPServer() {
+        HTTPServer.modifiedFileTable = new FileTable();
+        HTTPServer.modifiedFileTable.initInAFolder("./server/Resources");
+    }
 
     // start sever
     public void start() {
@@ -41,7 +41,7 @@ public class HTTPServer {
         serverConnect.creat(serverSocket);
         // serverConnect.setSoTimeout(10000);
 
-        // GET message
+        // 第一次链接，单独写出来是用来判断长链接的
         Request firstRequest = new Request(serverConnect.socket);
         // serverConnect.setSoTimeout(firstRequest.getTimeOut());
         Handle firstHandle = new Handle(firstRequest);
@@ -58,6 +58,7 @@ public class HTTPServer {
             Response.pushToClient(handle2.statusCode);
         }
 
+        // 长链接模式
         if (firstRequest.isKeepAlive()) {
             while (true) {
                 Request Request = new Request(serverConnect.socket);
@@ -76,21 +77,9 @@ public class HTTPServer {
         serverConnect.close();
     }
 
-    // stop sever
-    public void stop() {
-
-    }
-
+    // 服务端入口
     public static void main(String[] args) {
         HTTPServer sever = new HTTPServer();
         sever.start();
-    }
-
-    private static class ClientHandler extends Thread {
-        private Socket socket;
-
-        ClientHandler(Socket socket) {
-            this.socket = socket;
-        }
     }
 }

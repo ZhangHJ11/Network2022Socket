@@ -7,10 +7,13 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Date;
 
+import com.oracle.webservices.internal.api.message.ContentType;
+
 public class Response {
     private Request request;
     private OutputStream toClient;
     private String content;
+    private String contentType;
     /** test */
     private static String OldContent;
     private StringBuilder headInfo = new StringBuilder();
@@ -31,6 +34,7 @@ public class Response {
         }
     }
 
+    // create HeadInfo and get body
     private void createHeadInfo(int statusCode) {
         // Status Line
         headInfo.append("HTTP/1.1").append(BLANK);
@@ -76,8 +80,8 @@ public class Response {
         this.contentLen = content.getBytes().length;
         headInfo.append("Date:").append(new Date()).append(CRLF);
         headInfo.append("Server:").append("HOST Sever/0.0.0;charset=GBK").append(CRLF);
-        String ContentType = MIMEList.getMIMEType(request.getURL());
-        headInfo.append("Content-type:").append(ContentType).append(CRLF);
+        contentType = MIMEList.getMIMEType(request.getURL());
+        headInfo.append("Content-type:").append(contentType).append(CRLF);
         headInfo.append("Content-length:").append(contentLen).append(CRLF);
 
         headInfo.append(CRLF);
@@ -85,21 +89,17 @@ public class Response {
         /** test */
         OldStatusNode = statusCode;
         OldContent = content;
-        // Body
-        // headInfo.append(content);
     }
 
-    /**
-     * 返回客户端
-     *
-     * @param statusCode
-     */
+    // 返回客户端
     public void pushToClient(int statusCode) {
         createHeadInfo(statusCode);
-        System.out.println(headInfo);
-        // System.out.println(content);
         try {
-            toClient.write((headInfo.toString() + content).getBytes());
+            if (!contentType.equals("application/zip")) {
+                toClient.write((headInfo.toString() + content).getBytes());
+            } else {
+                toClient.write((headInfo.toString().getBytes()));
+            }
             toClient.flush();
         } catch (IOException e) {
             e.printStackTrace();

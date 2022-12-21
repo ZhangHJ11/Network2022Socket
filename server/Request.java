@@ -19,8 +19,8 @@ public class Request {
     private String requestInfo;
     public String method;
     private String url;
-    private String queryStr; // For POST, get query in Body
-    public Map<String, List<String>> paraMap;
+    private String queryStr; // get query in Body
+    public Map<String, List<String>> paraMap; // store the query in body
     private final String CRLF = "\r\n";
 
     public String getMethod() {
@@ -35,6 +35,7 @@ public class Request {
         this.url = newUrl;
     }
 
+    // read info from client
     public Request(Socket client) {
         try {
             fromClient = client.getInputStream();
@@ -46,27 +47,26 @@ public class Request {
             System.out.println("GET error.");
             return;
         }
-        parseGETInfo();
+        parseClientInfo();
     }
 
-    /**
-     * 请求行的数据
-     */
-    private void parseGETInfo() {
-        System.out.println(requestInfo);
+    private void parseClientInfo() {
         method = requestInfo.substring(0, requestInfo.indexOf(" "));
-        /**test*/
-        //int tmp1 = requestInfo.indexOf("/") + 1;
         int tmp1 = requestInfo.indexOf(" ") + 3;
         int tmp2 = requestInfo.indexOf("HTTP/") - 1;
         url = requestInfo.substring(tmp1, tmp2);
         // 版本默认 HTTP/1.1 不做处理
         // 专门处理登陆post
         if (method.equals("POST")) {
-//            linux 一个CRLF
-            queryStr = requestInfo.substring(requestInfo.indexOf(CRLF+CRLF)).trim();
+            // linux 一个CRLF
+            queryStr = requestInfo.substring(requestInfo.indexOf(CRLF + CRLF)).trim();
             paraMap = new HashMap<String, List<String>>();
             convertMap();
+        }
+        if (MIMETypes.getMIMELists().getMIMEType(url).equals("application/zip")) {
+            System.out.println(requestInfo.substring(0, requestInfo.indexOf(CRLF + CRLF)));
+        } else {
+            System.out.println(requestInfo);
         }
     }
 
@@ -89,12 +89,7 @@ public class Request {
         return false;
     }
 
-    /**
-     * 通过首部字段号查询之后的值
-     *
-     * @param key
-     * @return
-     */
+    // 通过首部字段号查询之后的值
     public String[] getParaValues(String key) {
         List<String> list = paraMap.get(key);
         if (list == null) {
@@ -103,12 +98,14 @@ public class Request {
         return list.toArray(new String[0]);
     }
 
+    // get special field TimeOut
     public int getTimeOut() {
         int index1 = requestInfo.indexOf("Time:") + 6;
         int index2 = requestInfo.lastIndexOf(CRLF) - 1;
         return Integer.parseInt(requestInfo.substring(index1, index2));
     }
 
+    // get special field Type
     public String getType() {
         int index1 = requestInfo.indexOf("Content-type:") + 14;
         int index2 = requestInfo.indexOf("Time:") - 1;
