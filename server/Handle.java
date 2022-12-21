@@ -4,7 +4,6 @@ import server.UserService.RegisterAndLogin;
 import server.redirectList.RedirectList;
 import util.FileMaker;
 import util.FileTable;
-import util.GetFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -15,7 +14,7 @@ import static server.HTTPServer.*;
 public class Handle {
     Request request;
     public static boolean isR = false;
-    private static  FileTable getFile = new FileTable();
+    private static final FileTable getFile = new FileTable();
     public String method;
     public String url;
     public int statusCode;
@@ -57,9 +56,6 @@ public class Handle {
                     // 修改文件
                     getFile.modify(location);
                 }
-                getTime = getFile.getModifiedTime(location);
-                modifyTime = modifiedFileTable.getModifiedTime(location);
-                //System.out.println(getTime + " " + modifyTime);
             }
             if (isR) {
                 isR = false;
@@ -72,13 +68,10 @@ public class Handle {
             }
         } else if (method.equals("POST")) {
             if (request.getParaValues("type") != null) {
-                // System.out.println("正确的");
-                RegisterAndLogin.getClientList().deal(request.getParaValues("type")[0],
-                        request.getParaValues("username")[0], request.getParaValues("password")[0]);
+                RegisterAndLogin.getClientList().deal(request.getParaValues("type")[0], request.getParaValues("username")[0], request.getParaValues("password")[0]);
                 statusCode = RegisterAndLogin.statusCode;
                 location = RegisterAndLogin.location;
                 request.setUrl(location);
-                // System.out.println(location);
             } else {
                 InputStream data = new ByteArrayInputStream(request.getBody());
                 String redirectQuery = redirectList.search(url);

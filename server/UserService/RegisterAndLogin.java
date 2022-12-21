@@ -1,14 +1,9 @@
 package server.UserService;
 
-import server.HTTPServer;
-import server.Request;
-import server.returnValue;
-
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class RegisterAndLogin {
-    private HashMap<String, String> clientMessages;
+    private final HashMap<String, String> clientMessages;
     // 单例模式
     private static final RegisterAndLogin now = new RegisterAndLogin();
     static private final String LOGIN_SUCCESS_DIR = "Resources/loginSuccess.html";
@@ -28,7 +23,6 @@ public class RegisterAndLogin {
     }
 
     public void deal(String type, String name, String password) {
-        //System.out.println(type+" " + name + " " + password);
         if ("register".equals(type)) {
             if(!register(name, password)) {
                 location = REGISTER_FAIL_DIR;
@@ -51,7 +45,6 @@ public class RegisterAndLogin {
             }
             statusCode = 200;
         }
-        //System.out.println(location);
     }
 
     private boolean register(String username, String password) {
