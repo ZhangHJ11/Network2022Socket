@@ -50,7 +50,7 @@ public class Post implements RequestMethod {
                 System.out.println(message);
                 break;
             case "301": {
-//                永久重定型
+//                永久重定向
                 String newLocation = message.substring(0, message.indexOf('\n') + 1);
                 newLocation = "./" + newLocation.substring(newLocation.indexOf(' ') + 1, newLocation.indexOf("\r\n"));
                 System.out.println("301 Permanent Redirecting To: " + newLocation);

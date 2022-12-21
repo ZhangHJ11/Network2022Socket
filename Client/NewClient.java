@@ -17,7 +17,8 @@ public class NewClient {
     RequestMethod requestMethod;
 
     public NewClient(int port, String host, boolean isKeepAlive) throws IOException {
-        connection = new Connect(host, port, isKeepAlive);
+        //        login in(temporarily true)
+        connection = new Connect(host, port, true);
         connection.creat();
         // login message
         Login login = new Login();
@@ -25,13 +26,14 @@ public class NewClient {
         // register after login
         switchMode("POST");
         requestMethod.sendRequest("./Resources/index.html", new RequestBody(infor));
+        connection.setKeepAlive(isKeepAlive);
 
         do {
             System.out.println("get, post or stop?");
             String cmd = StreamReader.readline();
             while ((!cmd.startsWith("get") && !cmd.startsWith("post") && !cmd.startsWith("stop"))) {
                 // invalid input
-                System.out.println("====>>>> WARNING <<<<===");
+                System.out.println("====>>>> WARNING <<<<====");
                 System.out.println("This is an invalid input." + System.lineSeparator() + "Please input again.");
                 cmd = StreamReader.readline();
             }
