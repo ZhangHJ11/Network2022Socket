@@ -3,7 +3,6 @@ package server;
 import java.util.HashMap;
 
 /**
- * @author Kevin
  * @Description
  */
 public class MIMETypes {
