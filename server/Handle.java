@@ -14,6 +14,7 @@ import static server.HTTPServer.*;
 public class Handle {
     Request request;
     public static boolean isR = false;
+    private boolean isDown = false;
     private static final FileTable getFile = new FileTable();
     public String method;
     public String url;
@@ -31,6 +32,10 @@ public class Handle {
 
     public void handle() {
         // System.out.println("body: " + request.getBody());
+        if(isDown){
+            statusCode = 500;
+            location = SERVER_ERROR_RES;
+        }
         if (method.equals("GET")) {
             String redirectQuery = redirectList.search(url);
             if (!redirectQuery.equals("")) {
