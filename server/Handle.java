@@ -14,7 +14,7 @@ import static server.HTTPServer.*;
 public class Handle {
     Request request;
     public static boolean isR = false;
-    private final boolean isDown = false;
+    private boolean isDown = false;
     private static final FileTable getFile = new FileTable();
     public String method;
     public String url;
@@ -30,6 +30,9 @@ public class Handle {
         fileList = setFileList();
     }
 
+    public void setIsDown(){
+        isDown = true;
+    }
     public void handle() {
         // System.out.println("body: " + request.getBody());
         if(isDown){
