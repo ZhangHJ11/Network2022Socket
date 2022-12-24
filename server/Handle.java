@@ -122,6 +122,7 @@ public class Handle {
         list.add("Resources/2.png");
         list.add("Resources/3.zip");
         list.add("Resources/4.png");
+        list.add("Resources/4.jpg");
         list.add("Resources/301origin.html");
         list.add("Resources/301dest.html");
         list.add("Resources/302dest.html");
