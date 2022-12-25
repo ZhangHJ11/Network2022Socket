@@ -12,10 +12,10 @@ import com.oracle.webservices.internal.api.message.ContentType;
 public class Response {
     private Request request;
     private OutputStream toClient;
-    private String content;
+    private byte[] content;
     private String contentType;
     /** test */
-    private static String OldContent;
+    private static byte[] OldContent;
     private StringBuilder headInfo = new StringBuilder();
     private int contentLen = 0; // bytes number;
     private final String BLANK = " ";
@@ -41,31 +41,31 @@ public class Response {
         headInfo.append(statusCode).append(BLANK); // HTTP Status Code, default 200
         switch (statusCode) {
             case 200:
-                headInfo.append("OK").append(CRLF);
+                headInfo.append("OK").append('\n');
                 break;
             case 301:
-                headInfo.append("Moved Permanently").append(CRLF);
+                headInfo.append("Moved Permanently").append('\n');
                 break;
             case 302:
-                headInfo.append("Found").append(CRLF);
+                headInfo.append("Found").append('\n');
                 break;
             case 304:
-                headInfo.append("Not Modified").append(CRLF);
+                headInfo.append("Not Modified").append('\n');
                 break;
             case 404:
-                headInfo.append("NOT FOUND").append(CRLF);
+                headInfo.append("NOT FOUND").append('\n');
                 break;
             case 405:
-                headInfo.append("NOT Permitted").append(CRLF);
+                headInfo.append("NOT Permitted").append('\n');
                 break;
             case 500: // 服务端错误
-                headInfo.append("Internal Server Error").append(CRLF);
+                headInfo.append("Internal Server Error").append('\n');
                 break;
             default:
                 break;
         }
         if (statusCode == 301 || statusCode == 302) {
-            headInfo.append("Location: ").append(request.getURL()).append(CRLF);
+            headInfo.append("Location: ").append(request.getURL()).append('\n');
         }
         /** test */
         if (301 != OldStatusNode && 302 != OldStatusNode) {
@@ -77,12 +77,12 @@ public class Response {
         } else {
             this.content = OldContent;
         }
-        this.contentLen = content.getBytes().length;
-        headInfo.append("Date:").append(new Date()).append(CRLF);
-        headInfo.append("Server:").append("HOST Sever/0.0.0;charset=GBK").append(CRLF);
+        this.contentLen = content.length;
+        headInfo.append("Date:").append(new Date()).append('\n');
+        headInfo.append("Server:").append("HOST Sever/0.0.0;charset=GBK").append('\n');
         contentType = MIMEList.getMIMEType(request.getURL());
-        headInfo.append("Content-type:").append(contentType).append(CRLF);
-        headInfo.append("Content-length:").append(contentLen).append(CRLF);
+        headInfo.append("Content-type:").append(contentType).append('\n');
+        headInfo.append("Content-length:").append(contentLen).append('\n');
 
         headInfo.append(CRLF);
 
@@ -96,7 +96,11 @@ public class Response {
         createHeadInfo(statusCode);
         try {
             if (!contentType.equals("application/zip")) {
-                toClient.write((headInfo.toString() + content).getBytes());
+                byte[] tmp = headInfo.toString().getBytes();
+                byte[] message = new byte[tmp.length + content.length];
+                System.arraycopy(tmp, 0, message, 0, tmp.length);
+                System.arraycopy(content, 0, message, tmp.length, content.length);
+                toClient.write(message);
             } else {
                 toClient.write((headInfo.toString().getBytes()));
             }

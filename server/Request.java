@@ -41,7 +41,11 @@ public class Request {
             fromClient = client.getInputStream();
             data = StreamReader.getBytes(fromClient);
             GETlen = data.length;
-            requestInfo = new String(data, 0, GETlen > 1000 ? 1000 : GETlen);
+            char[] tmp = new char[data.length];
+            for (int i = 0; i < data.length; i++) {
+                tmp[i] = (char) data[i];
+            }
+            requestInfo = String.valueOf(tmp);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("GET error.");
@@ -58,13 +62,13 @@ public class Request {
         // 版本默认 HTTP/1.1 不做处理
         // 专门处理登陆post
         if (method.equals("POST")) {
-            // linux 一个CRLF
-            queryStr = requestInfo.substring(requestInfo.indexOf(CRLF + CRLF)).trim();
+            // linux 一个CRLF，后面+2；windows 两个CRLF，后面+4
+            queryStr = requestInfo.substring(requestInfo.indexOf(CRLF + CRLF) + 4);
             paraMap = new HashMap<String, List<String>>();
             convertMap();
         }
         if (MIMETypes.getMIMELists().getMIMEType(url).equals("application/zip")) {
-            System.out.println(requestInfo.substring(0, requestInfo.indexOf(CRLF + CRLF)));
+            System.out.println(requestInfo.substring(0, requestInfo.indexOf(CRLF + CRLF) + 4));
         } else {
             System.out.println(requestInfo);
         }
@@ -113,7 +117,12 @@ public class Request {
     }
 
     public byte[] getBody() {
-        return queryStr.getBytes();
+        char[] tmp = queryStr.toCharArray();
+        byte[] ret = new byte[tmp.length];
+        for (int i = 0; i < tmp.length; i++) {
+            ret[i] = (byte) tmp[i];
+        }
+        return ret;
     }
 
 }

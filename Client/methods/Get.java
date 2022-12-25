@@ -20,9 +20,8 @@ public class Get implements RequestMethod {
     Connect connection;
 
     public Get(Connect connection) {
-        this.connection=connection;
+        this.connection = connection;
     }
-
 
     private HTTPRequest assembleRequest(String url) {
         RequestLine requestline = new RequestLine("GET", url);
@@ -44,26 +43,27 @@ public class Get implements RequestMethod {
     }
 
     public void conductResponse(String url) throws IOException {
-        byte[] data= StreamReader.getBytes(connection.getReceiveStream());
-        char[] tmp=new char[data.length];
-        for(int i=0;i< data.length;i++) tmp[i]=(char)data[i];
-        String message=String.valueOf(tmp);
-        String headline = message.substring(0, message.indexOf('\n')+1);
-        String getHead=message.substring(message.indexOf('\n')+1);
+        byte[] data = StreamReader.getBytes(connection.getReceiveStream());
+        char[] tmp = new char[data.length];
+        for (int i = 0; i < data.length; i++)
+            tmp[i] = (char) data[i];
+        String message = String.valueOf(tmp);
+        String headline = message.substring(0, message.indexOf('\n') + 1);
+        String getHead = message.substring(message.indexOf('\n') + 1);
         String[] head = headline.split(" ");
         switch (head[1]) {
             case "200":
-                int bodyIndex=message.indexOf("\r\n\r\n")+4;
-                String fileName=url.substring(12);
-                byte[] fileContent=new byte[data.length-bodyIndex];
-                System.arraycopy(data,bodyIndex,fileContent,0,fileContent.length);
-                FileMaker.write("./Client/Cache/"+fileName,new ByteArrayInputStream(fileContent));
+                int bodyIndex = message.indexOf("\r\n\r\n") + 4;
+                String fileName = url.substring(12);
+                byte[] fileContent = new byte[data.length - bodyIndex];
+                System.arraycopy(data, bodyIndex, fileContent, 0, fileContent.length);
+                FileMaker.write("./Client/Cache/" + fileName, new ByteArrayInputStream(fileContent));
                 break;
             case "301": {
                 String newLocation = getHead.substring(0, getHead.indexOf('\n') + 1);
-                newLocation = "./"+newLocation.substring(newLocation.indexOf(' ') + 1,newLocation.indexOf("\r\n"));
+                newLocation = "./" + newLocation.substring(newLocation.indexOf(' ') + 1, newLocation.indexOf("\r\n"));
                 System.out.println("301 Redirecting to: " + newLocation);
-                RedirectList.update(url,newLocation);
+                RedirectList.update(url, newLocation);
                 sendRequest(newLocation, null);
                 break;
             }
@@ -83,14 +83,14 @@ public class Get implements RequestMethod {
 
     public void sendRequest(String url, RequestBody body) throws IOException {
 
-        for(Map.Entry<String,String>entry: RedirectList.getRedirectList().entrySet()) {
-            if(entry.getKey().equals(url)) {
-                url=entry.getValue();
+        for (Map.Entry<String, String> entry : RedirectList.getRedirectList().entrySet()) {
+            if (entry.getKey().equals(url)) {
+                url = entry.getValue();
                 break;
             }
         }
 
-        HTTPRequest request=assembleRequest(url);
+        HTTPRequest request = assembleRequest(url);
         connection.getSendStream().write(request.toString().getBytes());
         conductResponse(url);
 
