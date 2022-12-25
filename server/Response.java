@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Date;
 
-
 public class Response {
     private Request request;
     private OutputStream toClient;
@@ -96,14 +95,18 @@ public class Response {
         System.out.println(headInfo);
         System.out.println(content);
         try {
+            char[] tmpC = headInfo.toString().toCharArray();
+            byte[] tmp = new byte[tmpC.length];
+            for (int i = 0; i < tmpC.length; i++) {
+                tmp[i] = (byte) tmpC[i];
+            }
             if (!contentType.equals("application/zip")) {
-                byte[] tmp = headInfo.toString().getBytes();
                 byte[] message = new byte[tmp.length + content.length];
                 System.arraycopy(tmp, 0, message, 0, tmp.length);
                 System.arraycopy(content, 0, message, tmp.length, content.length);
                 toClient.write(message);
             } else {
-                toClient.write((headInfo.toString().getBytes()));
+                toClient.write(tmp);
             }
             toClient.flush();
         } catch (IOException e) {

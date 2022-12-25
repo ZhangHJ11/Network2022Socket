@@ -53,7 +53,7 @@ public class Get implements RequestMethod {
         String[] head = headline.split(" ");
         switch (head[1]) {
             case "200":
-                int bodyIndex = message.indexOf("\r\n\r\n") + 4;
+                int bodyIndex = message.indexOf("\n\r\n") + 3;
                 String fileName = url.substring(12);
                 byte[] fileContent = new byte[data.length - bodyIndex];
                 System.arraycopy(data, bodyIndex, fileContent, 0, fileContent.length);
