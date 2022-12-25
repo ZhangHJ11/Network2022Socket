@@ -6,6 +6,7 @@ import util.FileMaker;
 import util.FileTable;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -34,7 +35,6 @@ public class Handle {
         isDown = true;
     }
     public void handle() {
-        // System.out.println("body: " + request.getBody());
         if(isDown){
             statusCode = 500;
             location = SERVER_ERROR_RES;
@@ -119,7 +119,13 @@ public class Handle {
      */
     private ArrayList<String> setFileList() {
         ArrayList<String> list = new ArrayList<>();
-        list.add("Resources/2.png");
+        File file = new File("./server/Resources");
+        File[] files = file.listFiles();
+        for(File file1 : files){
+            list.add("Resources/" + file1.getName());
+        }
+        //System.out.println(list);
+        /*list.add("Resources/2.png");
         list.add("Resources/3.zip");
         list.add("Resources/4.png");
         list.add("Resources/4.jpg");
@@ -142,7 +148,7 @@ public class Handle {
         list.add("Resources/registerSuccess.html");
         list.add("Resources/temp.txt");
         list.add("Resources/testForm");
-        list.add("Resources/uploadSuccess.html");
+        list.add("Resources/uploadSuccess.html");*/
         return list;
     }
 }

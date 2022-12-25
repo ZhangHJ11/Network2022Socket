@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Date;
 
-import com.oracle.webservices.internal.api.message.ContentType;
 
 public class Response {
     private Request request;
@@ -94,6 +93,8 @@ public class Response {
     // 返回客户端
     public void pushToClient(int statusCode) {
         createHeadInfo(statusCode);
+        System.out.println(headInfo);
+        System.out.println(content);
         try {
             if (!contentType.equals("application/zip")) {
                 byte[] tmp = headInfo.toString().getBytes();
