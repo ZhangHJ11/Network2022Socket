@@ -56,6 +56,7 @@ public class Post implements RequestMethod {
                 System.out.println("301 Permanent Redirecting To: " + newLocation);
                 RedirectList.update(url, newLocation);
 //                sendRequest(newLocation, null);
+//                手动再发送一次报文
                 break;
             }
             case "302": {
@@ -64,6 +65,7 @@ public class Post implements RequestMethod {
                 newLocation = "./" + newLocation.substring(newLocation.indexOf(' ') + 1);
                 System.out.println("302 Temporary Redirecting To: " + newLocation);
 //                sendRequest("./" + newLocation, null);
+//                手动再发送一次报文
                 break;
             }
             case "404":
@@ -73,6 +75,7 @@ public class Post implements RequestMethod {
     }
 
     public void sendRequest(String url, RequestBody body) throws IOException {
+//        发送报文前先查找重定向表
         for (Map.Entry<String, String> entry : RedirectList.getRedirectList().entrySet()) {
             if (entry.getKey().equals(url)) {
                 url = entry.getValue();
@@ -80,6 +83,7 @@ public class Post implements RequestMethod {
             }
         }
 
+//      报文通过byte数组，再转化为stream发送，以实现MIME中的多种文件格式的传输
         HTTPRequest request = assembleRequest(url, body);
         byte[] bytes = new byte[request.toString().getBytes().length + request.requestBody.getlength()];
 //        head

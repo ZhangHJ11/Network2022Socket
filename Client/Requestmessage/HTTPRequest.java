@@ -13,6 +13,10 @@ public class HTTPRequest {
         this.requestBody = requestBody;
     }
 
+    /**
+     * 客户端发送报文的toString方法，对于body不是字符串内容的报文，这个方法会导致乱码
+     * @return
+     */
     @Override
     public String toString() {
         StringBuilder request=new StringBuilder();
@@ -24,6 +28,12 @@ public class HTTPRequest {
         return request.toString();
     }
 
+    /**
+     * body转化成bytes方法
+     * 用于组装报文，同时不会损坏格式
+     * @return
+     * @throws IOException
+     */
     public byte[] bodytobyte() throws IOException {
         return requestBody.getBytes();
     }

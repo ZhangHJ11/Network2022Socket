@@ -5,7 +5,6 @@ package Client.Requestmessage;
 //    请求行
 public class RequestLine {
 
-
     private String method=null;
 
     private String url=null;

@@ -47,8 +47,7 @@ public class NewClient {
                     break;
                 case "get":
                     // ./Resources/index.html
-                    // ./Resources/2.png
-                    // TODO:文件下载
+                    // ./Resources/4.png
                     switchMode("GET");
                     System.out.println("url?");
                     String url = StreamReader.readline();
@@ -67,10 +66,11 @@ public class NewClient {
                         type = StreamReader.readline();
                     }
                     if (type.equals("login")) {
+//                        重新登陆
                         infor = login.change();
                         requestMethod.sendRequest("./Resources/index.html", new RequestBody(infor));
                     } else if (type.equals("upload")) {
-                        // TODO:文件上传
+//                        上传文件
                         System.out.println("the url of the file you want to upload?(e.g. uploadSuccess.html)");
                         String fileurl = StreamReader.readline();
                         File file = new File(System.getProperty("user.dir") + File.separator +
