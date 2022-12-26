@@ -12,15 +12,12 @@ public class Response {
     private OutputStream toClient;
     private byte[] content;
     private String contentType;
-    /** test */
     private static byte[] OldContent;
     private StringBuilder headInfo = new StringBuilder();
     private int contentLen = 0; // bytes number;
     private final String BLANK = " ";
     private final String CRLF = "\r\n";
     MIMETypes MIMEList = MIMETypes.getMIMELists();
-
-    /** just for test */
     private static int OldStatusNode = 0;
 
     public Response(Socket client, Request request) {
@@ -62,10 +59,10 @@ public class Response {
             default:
                 break;
         }
+        //重定向多一行
         if (statusCode == 301 || statusCode == 302) {
             headInfo.append("Location: ").append(request.getURL()).append('\n');
         }
-        /** test */
         if (301 != OldStatusNode && 302 != OldStatusNode) {
             try {
                 this.content = GetFile.getFile(request.getURL());
@@ -84,7 +81,6 @@ public class Response {
 
         headInfo.append(CRLF);
 
-        /** test */
         OldStatusNode = statusCode;
         OldContent = content;
     }

@@ -17,7 +17,6 @@ public class RegisterAndLogin {
     private RegisterAndLogin() {
         clientMessages = new HashMap<>();
     }
-
     public static RegisterAndLogin getClientList() {
         return now;
     }
@@ -48,7 +47,9 @@ public class RegisterAndLogin {
     }
 
     private boolean register(String username, String password) {
+        //已有
         if (clientMessages.containsKey(username)) return false;
+        //注册成功
         clientMessages.put(username, password);
         return true;
     }

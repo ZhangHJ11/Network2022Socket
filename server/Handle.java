@@ -35,6 +35,7 @@ public class Handle {
         isDown = true;
     }
     public void handle() {
+        //模拟服务器挂掉
         if(isDown){
             statusCode = 500;
             location = SERVER_ERROR_RES;
@@ -56,7 +57,6 @@ public class Handle {
                 // 文件修改时间
                 Long getTime = getFile.getModifiedTime(location);
                 Long modifyTime = modifiedFileTable.getModifiedTime(location);
-                //System.out.println(getTime + " " + modifyTime);
                 if (getTime > modifyTime) {
                     statusCode = 304;
                     location = NOT_MODIFIED_RES;
@@ -66,16 +66,19 @@ public class Handle {
                     getFile.modify(location);
                 }
             }
+            //是否重定向
             if (isR) {
                 isR = false;
                 return;
             }
+            //文件不存在
             if (!fileList.contains(location)) {
                 statusCode = 404;
                 location = NOT_FOUND_RES;
                 request.setUrl(location);
             }
         } else if (method.equals("POST")) {
+            //是否为注册登录
             if (request.getParaValues("type") != null) {
                 RegisterAndLogin.getClientList().deal(request.getParaValues("type")[0], request.getParaValues("username")[0], request.getParaValues("password")[0]);
                 statusCode = RegisterAndLogin.statusCode;
@@ -92,6 +95,7 @@ public class Handle {
                     request.setUrl(location);
                     return;
                 }
+                //文件不存在，新建
                 if (!fileList.contains(url)) {
                     statusCode = 200;
                     location = url;
@@ -99,14 +103,18 @@ public class Handle {
                     FileMaker.write("./server/" + url, data);
                     fileList.add(location);
                     modifiedFileTable.modify(location);
-                } else {
+                }
+                //文件存在
+                else {
                     statusCode = 200;
                     location = url;
                     FileMaker.write("./server/" + url, data);
                     modifiedFileTable.modify(location);
                 }
             }
-        } else {
+        }
+        //不支持的指令
+        else {
             // 405
             statusCode = 405;
             location = METHOD_NOT_ALLOWED_RES;
@@ -121,34 +129,10 @@ public class Handle {
         ArrayList<String> list = new ArrayList<>();
         File file = new File("./server/Resources");
         File[] files = file.listFiles();
+        assert files != null;
         for(File file1 : files){
             list.add("Resources/" + file1.getName());
         }
-        //System.out.println(list);
-        /*list.add("Resources/2.png");
-        list.add("Resources/3.zip");
-        list.add("Resources/4.png");
-        list.add("Resources/4.jpg");
-        list.add("Resources/301origin.html");
-        list.add("Resources/301dest.html");
-        list.add("Resources/302dest.html");
-        list.add("Resources/302origin.html");
-        list.add("Resources/304.html");
-        list.add("Resources/404.html");
-        list.add("Resources/405.html");
-        list.add("Resources/500.html");
-        list.add("Resources/index.html");
-        list.add("Resources/lab6.png");
-        list.add("Resources/loginSuccess.html");
-        list.add("Resources/loginFail.html");
-        list.add("Resources/pic.png");
-        list.add("Resources/post.html");
-        list.add("Resources/post_success.html");
-        list.add("Resources/registerFail.html");
-        list.add("Resources/registerSuccess.html");
-        list.add("Resources/temp.txt");
-        list.add("Resources/testForm");
-        list.add("Resources/uploadSuccess.html");*/
         return list;
     }
 }
