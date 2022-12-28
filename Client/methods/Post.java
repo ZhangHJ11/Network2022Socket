@@ -52,7 +52,6 @@ public class Post implements RequestMethod {
             case "301": {
 //                永久重定向
                 String newLocation = message.substring(0, message.indexOf('\n') + 1);
-//                System.out.println(newLocation);
                 newLocation = "./" + newLocation.substring(newLocation.indexOf(' ') + 1);
                 System.out.println("301 Permanent Redirecting To: " + newLocation);
                 RedirectList.update(url, newLocation);
@@ -63,7 +62,6 @@ public class Post implements RequestMethod {
             case "302": {
 //                临时重定向
                 String newLocation = message.substring(0, message.indexOf('\n') + 1);
-//                System.out.println(newLocation);
                 newLocation = "./" + newLocation.substring(newLocation.indexOf(' ') + 1);
                 System.out.println("302 Temporary Redirecting To: " + newLocation);
 //                sendRequest("./" + newLocation, null);

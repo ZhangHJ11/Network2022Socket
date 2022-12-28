@@ -40,7 +40,7 @@ public class NewClient {
                 case "stop":
                     switchMode("GET");
                     connection.setKeepAlive(false);
-                    requestMethod.sendRequest("./Resources/index.html", new RequestBody());
+                    requestMethod.sendRequest("./Resources/stop.html", new RequestBody());
                     System.out.println("====>>>> MESSAGE LINE <<<<====");
                     System.out.println("connection released!!!");
                     break;
