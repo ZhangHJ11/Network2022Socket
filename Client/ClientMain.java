@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class ClientMain {
     public static void main(String[] args) throws IOException {
-        int port = 8888;
+        int port = 5689;
         String host = "127.0.0.1";
         System.out.println("Do you want to keep alive?(Y/N)");
         String cmd = StreamReader.readline();

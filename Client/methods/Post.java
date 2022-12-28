@@ -71,6 +71,12 @@ public class Post implements RequestMethod {
             case "404":
                 System.out.println("404 Not Found");
                 break;
+            case "405":
+                System.out.println("Method Not Allowed");
+                break;
+            case "500":
+                System.out.println("Internal Server Error");
+                break;
         }
     }
 

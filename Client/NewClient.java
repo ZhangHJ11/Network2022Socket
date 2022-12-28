@@ -49,7 +49,7 @@ public class NewClient {
                     // ./Resources/index.html
                     // ./Resources/4.png
                     switchMode("GET");
-                    System.out.println("url?");
+                    System.out.println("url?(e.g. ./Resources/index.html)");
                     String url = StreamReader.readline();
                     System.out.println("====>>>> RECEIVING MESSAGE <<<<====");
                     requestMethod.sendRequest(url, null);

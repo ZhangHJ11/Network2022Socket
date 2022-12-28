@@ -25,7 +25,7 @@ public class HTTPServer {
     // start sever
     public void start() {
         try {
-            serverSocket = new ServerSocket(8888);
+            serverSocket = new ServerSocket(5689);
             receive();
         } catch (IOException e) {
             e.printStackTrace();
