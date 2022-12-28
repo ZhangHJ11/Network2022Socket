@@ -1,0 +1,15 @@
+package Client;
+
+import java.util.HashMap;
+
+public class RedirectList {
+    private static final HashMap<String, String> redirectList = new HashMap<>();
+
+    public static HashMap<String, String> getRedirectList() {
+        return redirectList;
+    }
+
+    public static void update(String from, String to) {
+        redirectList.put(from, to);
+    }
+}
