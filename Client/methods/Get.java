@@ -51,9 +51,10 @@ public class Get implements RequestMethod {
         String headline = message.substring(0, message.indexOf('\n') + 1);
         String getHead = message.substring(message.indexOf('\n') + 1);
         String[] head = headline.split(" ");
+        int bodyIndex = message.indexOf("\n\r\n") + 3;
+        System.out.println(message.substring(0,bodyIndex-3));
         switch (head[1]) {
             case "200":
-                int bodyIndex = message.indexOf("\n\r\n") + 3;
                 String fileName = url.substring(12);
                 byte[] fileContent = new byte[data.length - bodyIndex];
                 System.arraycopy(data, bodyIndex, fileContent, 0, fileContent.length);
@@ -61,7 +62,7 @@ public class Get implements RequestMethod {
                 break;
             case "301": {
                 String newLocation = getHead.substring(0, getHead.indexOf('\n') + 1);
-                newLocation = "./" + newLocation.substring(newLocation.indexOf(' ') + 1, newLocation.indexOf("\r\n"));
+                newLocation = "./" + newLocation.substring(newLocation.indexOf(' ') + 1, newLocation.indexOf("\n"));
                 System.out.println("301 Redirecting to: " + newLocation);
                 RedirectList.update(url, newLocation);
                 sendRequest(newLocation, null);
@@ -69,7 +70,7 @@ public class Get implements RequestMethod {
             }
             case "302": {
                 String newLocation = getHead.substring(0, getHead.indexOf('\n') + 1);
-                newLocation = newLocation.substring(newLocation.indexOf(' ') + 1);
+                newLocation = newLocation.substring(newLocation.indexOf(' ') + 1, newLocation.indexOf("\n"));
                 System.out.println("302 Redirecting to: " + newLocation);
                 sendRequest("./" + newLocation, null);
                 break;

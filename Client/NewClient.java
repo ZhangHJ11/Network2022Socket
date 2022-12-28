@@ -5,8 +5,6 @@ import Client.Requestmessage.RequestBody;
 import Client.methods.Get;
 import Client.methods.Post;
 import Client.methods.RequestMethod;
-import jdk.nashorn.internal.ir.WhileNode;
-import util.GetFile;
 import util.StreamReader;
 
 import java.io.File;
