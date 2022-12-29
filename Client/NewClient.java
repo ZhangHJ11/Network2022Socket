@@ -4,6 +4,7 @@ import Client.Loginservice.Login;
 import Client.Requestmessage.RequestBody;
 import Client.methods.Get;
 import Client.methods.Post;
+import Client.methods.Put;
 import Client.methods.RequestMethod;
 import util.StreamReader;
 
@@ -28,9 +29,9 @@ public class NewClient {
         connection.setKeepAlive(isKeepAlive);
 
         do {
-            System.out.println("get, post or stop?");
+            System.out.println("get, post, put or stop?");
             String cmd = StreamReader.readline();
-            while ((!cmd.startsWith("get") && !cmd.startsWith("post") && !cmd.startsWith("stop"))) {
+            while ((!cmd.startsWith("get") && !cmd.startsWith("post") && !cmd.startsWith("stop")) && !cmd.startsWith("put")) {
                 // invalid input
                 System.out.println("====>>>> WARNING <<<<====");
                 System.out.println("This is an invalid input." + System.lineSeparator() + "Please input again.");
@@ -44,6 +45,11 @@ public class NewClient {
                     System.out.println("====>>>> MESSAGE LINE <<<<====");
                     System.out.println("connection released!!!");
                     break;
+                case "put":
+                    switchMode("PUT");
+                    System.out.println("====>>>> MESSAGE LINE <<<<====");
+                    requestMethod.sendRequest("./Resources/index.html", null);
+                    continue;
                 case "get":
                     // ./Resources/index.html
                     // ./Resources/4.png
@@ -76,7 +82,7 @@ public class NewClient {
                                 "Client" + File.separator + "Resources/" + fileurl);
                         System.out.println("target url?(e.g. ./Resources/uploadSuccess.html)");
                         url = StreamReader.readline();
-                        while(!url.startsWith("./Resources")){
+                        while (!url.startsWith("./Resources")) {
                             System.out.println("====>>>> WARNING <<<<====");
                             System.out.println("This is an invalid input." + System.lineSeparator() + "target url should starts with './Resources'.");
                             url = StreamReader.readline();
@@ -97,6 +103,8 @@ public class NewClient {
             this.requestMethod = new Get(connection);
         } else if (method.equals("POST")) {
             this.requestMethod = new Post(connection);
+        } else if (method.equals("PUT")) {
+            this.requestMethod = new Put(connection);
         }
     }
 
