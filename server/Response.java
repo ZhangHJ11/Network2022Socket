@@ -59,7 +59,7 @@ public class Response {
             default:
                 break;
         }
-        //重定向多一行
+        // 重定向多一行
         if (statusCode == 301 || statusCode == 302) {
             headInfo.append("Location: ").append(request.getURL()).append('\n');
         }
@@ -89,20 +89,27 @@ public class Response {
     public void pushToClient(int statusCode) {
         createHeadInfo(statusCode);
         System.out.println(headInfo);
-        //System.out.println(content);
+        // System.out.println(content);
         try {
             char[] tmpC = headInfo.toString().toCharArray();
             byte[] tmp = new byte[tmpC.length];
             for (int i = 0; i < tmpC.length; i++) {
                 tmp[i] = (byte) tmpC[i];
             }
-            if (!contentType.equals("application/zip")) {
+            if (request.method.equals("GET")) {
                 byte[] message = new byte[tmp.length + content.length];
                 System.arraycopy(tmp, 0, message, 0, tmp.length);
                 System.arraycopy(content, 0, message, tmp.length, content.length);
                 toClient.write(message);
             } else {
-                toClient.write(tmp);
+                if (contentType.indexOf("text/") != -1) {
+                    byte[] message = new byte[tmp.length + content.length];
+                    System.arraycopy(tmp, 0, message, 0, tmp.length);
+                    System.arraycopy(content, 0, message, tmp.length, content.length);
+                    toClient.write(message);
+                } else {
+                    toClient.write(tmp);
+                }
             }
             toClient.flush();
         } catch (IOException e) {
@@ -110,5 +117,4 @@ public class Response {
             System.out.println("Push Failed.");
         }
     }
-
 }
