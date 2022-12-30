@@ -67,10 +67,10 @@ public class Request {
             paraMap = new HashMap<String, List<String>>();
             convertMap();
         }
-        if (MIMETypes.getMIMELists().getMIMEType(url).equals("application/zip")) {
-            System.out.println(requestInfo.substring(0, requestInfo.indexOf(CRLF + CRLF) + 4));
-        } else {
+        if (MIMETypes.getMIMELists().getMIMEType(url).contains("text/")) {
             System.out.println(requestInfo);
+        } else {
+            System.out.println(requestInfo.substring(0, requestInfo.indexOf(CRLF + CRLF) + 4));
         }
     }
 
