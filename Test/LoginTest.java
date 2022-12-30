@@ -2,7 +2,7 @@ package Test;
 
 import server.UserService.RegisterAndLogin;
 
-public class loginTest {
+public class LoginTest {
     public static void main(String[] args){
         RegisterAndLogin.getClientList().deal("register","12345","1234");
         System.out.println(RegisterAndLogin.statusCode);
