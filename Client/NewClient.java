@@ -85,6 +85,7 @@ public class NewClient {
                             System.out.println("This is an invalid input." + System.lineSeparator() + "target url should starts with './Resources'.");
                             url = StreamReader.readline();
                         }
+                        System.out.println("====>>>> RECEIVING MESSAGE <<<<====");
                         requestMethod.sendRequest(url, new RequestBody(Files.newInputStream(file.toPath())));
                     }
                     continue;

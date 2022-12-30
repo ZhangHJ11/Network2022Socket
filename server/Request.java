@@ -15,7 +15,6 @@ public class Request {
     private InputStream fromClient;
 
     private byte[] data = new byte[1024 * 1024]; // 1MB
-    private int GETlen;
     private String requestInfo;
     public String method;
     private String url;
@@ -40,7 +39,6 @@ public class Request {
         try {
             fromClient = client.getInputStream();
             data = StreamReader.getBytes(fromClient);
-            GETlen = data.length;
             char[] tmp = new char[data.length];
             for (int i = 0; i < data.length; i++) {
                 tmp[i] = (char) data[i];
@@ -67,11 +65,7 @@ public class Request {
             paraMap = new HashMap<String, List<String>>();
             convertMap();
         }
-        if (MIMETypes.getMIMELists().getMIMEType(url).contains("text/")) {
-            System.out.println(requestInfo);
-        } else {
-            System.out.println(requestInfo.substring(0, requestInfo.indexOf(CRLF + CRLF) + 4));
-        }
+        System.out.println(requestInfo.substring(0, requestInfo.indexOf(CRLF + CRLF) + 4));
     }
 
     private void convertMap() {

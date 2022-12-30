@@ -88,10 +88,7 @@ public class Response {
     // 返回客户端
     public void pushToClient(int statusCode) {
         createHeadInfo(statusCode);
-        System.out.println(headInfo + CRLF);
-        if (contentType.indexOf("text/") != -1) {
-            System.out.println(content);
-        }
+        System.out.println(headInfo);
         try {
             char[] tmpC = headInfo.toString().toCharArray();
             byte[] tmp = new byte[tmpC.length];
