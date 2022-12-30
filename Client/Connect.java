@@ -48,6 +48,7 @@ public class Connect {
     }
 
     public void creat() {
+        //建立连接
         try {
             server = new Socket(host, port);
             server.setKeepAlive(isKeepAlive);

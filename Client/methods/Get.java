@@ -12,9 +12,7 @@ import util.StreamReader;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.stream.Stream;
 
 public class Get implements RequestMethod {
     Connect connection;
@@ -43,10 +41,12 @@ public class Get implements RequestMethod {
     }
 
     public void conductResponse(String url) throws IOException {
+        //以byte[]形式读取服务端返回内容，以实现MIME中的多种文件格式的传输
         byte[] data = StreamReader.getBytes(connection.getReceiveStream());
         char[] tmp = new char[data.length];
         for (int i = 0; i < data.length; i++)
             tmp[i] = (char) data[i];
+        //获取报文头String
         String message = String.valueOf(tmp);
         String headline = message.substring(0, message.indexOf('\n') + 1);
         String getHead = message.substring(message.indexOf('\n') + 1);
@@ -54,13 +54,16 @@ public class Get implements RequestMethod {
         int bodyIndex = message.indexOf("\n\r\n") + 3;
         System.out.println(message.substring(0,bodyIndex-3));
         switch (head[1]) {
+            //status code
             case "200":
+                //OK
                 String fileName = url.substring(12);
                 byte[] fileContent = new byte[data.length - bodyIndex];
                 System.arraycopy(data, bodyIndex, fileContent, 0, fileContent.length);
                 FileMaker.write("./Client/Cache/" + fileName, new ByteArrayInputStream(fileContent));
                 break;
             case "301": {
+                //301 permanent redirect
                 String newLocation = getHead.substring(0, getHead.indexOf('\n') + 1);
                 newLocation = "./" + newLocation.substring(newLocation.indexOf(' ') + 1, newLocation.indexOf("\n"));
                 System.out.println("301 Redirecting to: " + newLocation);
@@ -69,6 +72,7 @@ public class Get implements RequestMethod {
                 break;
             }
             case "302": {
+                //302 temporary redirect
                 String newLocation = getHead.substring(0, getHead.indexOf('\n') + 1);
                 newLocation = newLocation.substring(newLocation.indexOf(' ') + 1, newLocation.indexOf("\n"));
                 System.out.println("302 Redirecting to: " + newLocation);
@@ -76,6 +80,7 @@ public class Get implements RequestMethod {
                 break;
             }
             case "304": {
+                //304 in Cache
                 System.out.println("304 Redirecting to: " + url);
                 break;
             }
@@ -94,6 +99,7 @@ public class Get implements RequestMethod {
 
     public void sendRequest(String url, RequestBody body) throws IOException {
 
+        //发送报文前先查找重定向表
         for (Map.Entry<String, String> entry : RedirectList.getRedirectList().entrySet()) {
             if (entry.getKey().equals(url)) {
                 url = entry.getValue();
