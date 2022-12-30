@@ -42,8 +42,6 @@ public class NewClient {
                     switchMode("GET");
                     connection.setKeepAlive(false);
                     requestMethod.sendRequest("./Resources/stop.html", new RequestBody());
-                    System.out.println("====>>>> MESSAGE LINE <<<<====");
-                    System.out.println("connection released!!!");
                     break;
                 case "put":
                     switchMode("PUT");
@@ -95,7 +93,8 @@ public class NewClient {
                     System.out.println("This is an invalid input." + System.lineSeparator() + "Please input again.");
             }
         } while (connection.isPersistent());
-
+        System.out.println("====>>>> MESSAGE LINE <<<<====");
+        System.out.println("Connection released.");
     }
 
     public void switchMode(String method) {
